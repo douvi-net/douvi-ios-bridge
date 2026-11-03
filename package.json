@@ -1,6 +1,6 @@
 {
   "name": "douvi-ios-bridge",
-  "version": "0.1.0-dev.1",
+  "version": "0.1.0-dev.2",
   "private": true,
   "description": "A local-first Windows workbench for Flutter iOS builds on your own macOS CI.",
   "license": "MIT",
@@ -19,7 +19,9 @@
     "test:watch": "vitest",
     "tauri": "cd apps/desktop && tauri",
     "check": "npm run lint && npm run typecheck && npm test && npm run build",
-    "test:ui": "node scripts/browser-smoke.mjs"
+    "test:ui": "node scripts/browser-smoke.mjs",
+    "test:windows": "node scripts/windows-smoke.mjs",
+    "licenses:bundle": "node scripts/bundle-notices.mjs"
   },
   "dependencies": {
     "@tauri-apps/api": "2.12.4",

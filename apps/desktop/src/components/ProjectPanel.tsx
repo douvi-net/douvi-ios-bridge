@@ -43,21 +43,23 @@ export function ProjectPanel({
   const blocked = !project || project.findings.some((f) => f.severity === "error");
   return (
     <>
-      <input
-        className="visually-hidden"
-        type="file"
-        multiple
-        aria-label={t.import}
-        ref={(node) => {
-          picker.current = node;
-          node?.setAttribute("webkitdirectory", "");
-        }}
-        onChange={(event) => {
-          const files = event.target.files;
-          if (files) void inspect(() => readFolderFiles(files));
-          event.target.value = "";
-        }}
-      />
+      {!isTauri() && (
+        <input
+          className="visually-hidden"
+          type="file"
+          multiple
+          aria-label={t.import}
+          ref={(node) => {
+            picker.current = node;
+            node?.setAttribute("webkitdirectory", "");
+          }}
+          onChange={(event) => {
+            const files = event.target.files;
+            if (files) void inspect(() => readFolderFiles(files));
+            event.target.value = "";
+          }}
+        />
+      )}
       {!project ? (
         <>
           <section className="hero">

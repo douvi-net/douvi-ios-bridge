@@ -1,39 +1,42 @@
 # Tiến độ Douvi iOS Bridge — 03/11/2026
 
-Repository chính thức: https://github.com/douvi-net/douvi-ios-bridge, **Public, MIT**, theo phê duyệt của chủ tài khoản. Bản mã nền công khai gồm 73 tệp được theo dõi, bao gồm source, icon, test, fixture, nghiên cứu và tài liệu nghiệm thu. Các commit rút gọn bên dưới thuộc lịch sử local có trong gói bàn giao ban đầu; lịch sử commit trên GitHub được tạo khi công khai source. **Chưa chạy CI, chưa phát hành installer, chưa có IPA thật.**
+Repository chính thức: https://github.com/douvi-net/douvi-ios-bridge, **Public, MIT**, theo phê duyệt của chủ tài khoản. **Đã hoàn tất kiểm thử tự động và đóng gói bộ cài phát triển Windows x64 `0.1.0-dev.2`. Chưa có IPA thật hoặc public Release.**
+
+## TASK 03 — Kết quả Windows
+
+[GitHub Actions run 41640848673](https://github.com/douvi-net/douvi-ios-bridge/actions/runs/41640848673) hoàn tất thành công trên source `c56fc30b3923d2f6cc5dba1b0a2316751335a2e7`. Bản NSIS cài theo người dùng đã được cài, mở bằng executable vừa cài và gỡ thành công trên Windows Server 2022 x64. Kiểm thử kết nối vào WebView2 thật của Tauri, không thay bằng giao diện web giả lập.
+
+- JavaScript: lint, TypeScript, **71 tests / 3 files**, production web build, npm audit không báo advisory và **9 nhóm browser smoke** đều đạt.
+- Native: Rust **1.99.1**, Cargo.lock, rustfmt, **7 test Rust** và Clippy với `-D warnings` đều đạt trên Windows.
+- **8 nhóm native smoke** đạt: PE/hash, cài per-user và đối chiếu binary, mở WebView2, mở/hủy folder picker, drop-handler fallback, chọn fixture qua native dialog → Rust IPC → findings, từ chối IPC lạ cùng VI/EN/theme persistence, gỡ cài đặt.
+- Logo xanh Douvi D/cây cầu được gắn vào giao diện và tài nguyên Windows. Icon của ứng dụng, installer và uninstaller đã được trích xuất từ PE thật, đối chiếu dữ liệu từng frame với ICO đã duyệt; cả ba đạt.
+- Bộ cài kèm giấy phép upstream và inventory cho 252 package. RustSec preflight không có vulnerability entry; hai cảnh báo thông tin nằm ngoài dependency graph Windows đã chọn, xem [audit](verification/task03-rust-audit.json).
+- ZIP artifact đã tải về và được đối chiếu digest GitHub, CRC, biên nhận PASS, source/run ID, hash/size installer, Cargo.lock và toolchain. [Biên nhận cuối](verification/windows-branding-20261103.json), [cách tái tạo](WINDOWS.md).
+
+Installer `Douvi iOS Bridge_0.1.0-dev.2_x64-setup.exe`: 2,227,973 byte, SHA-256 `8351c3c41d290e4a8d1131e1eec810a84ca04556468d045d40d179e6399f8bc1`. Artifact GitHub `13233213236` được giữ một ngày, hết hạn `2026-11-04T13:12:40Z`. Commit thêm biên nhận/tài liệu sau run chỉ cập nhật tài liệu; source đã build vẫn là SHA nêu trên.
+
+**Phạm vi:** runner Windows Server không thay cho nghiệm thu máy Windows 10/11 cá nhân, kéo thả vật lý hoặc máy sạch thiếu WebView2. Đây là bộ cài phát triển chưa ký Authenticode. Fixture chỉ có metadata; không suy ra Flutter/iOS build, signing, cài iPhone hoặc TestFlight đã hoạt động.
 
 | Hạng mục | Kết quả | Bằng chứng và giới hạn |
 | --- | --- | --- |
-| TASK 01 — Research & Architecture | **PASS** | So sánh 7 repo bắt buộc và công cụ bổ sung; snapshot commit/release/license/issues; chính sách CI hiện hành; kiến trúc và 3 ADR. [Nghiên cứu](research/TASK-01.vi.md), commit `033793b`. |
-| TASK 02 — Repository Foundation, phần source | **PASS trong phạm vi cục bộ** | README VI/EN, MIT, góp ý/bảo mật/ứng xử, issue/PR templates, CI thủ công có chặn chi phí, mã nền module và lockfile npm. Commit `9a8ea86`. |
-| TASK 02 — Repository GitHub | **PASS phần công khai source** | Repo `douvi-net/douvi-ios-bridge` đã tạo Public với MIT. Source được công khai trên `main`, giữ đúng cây thư mục. Private vulnerability reporting đã bật. CI YAML chỉ chạy thủ công; chưa dispatch hoặc nghiệm thu CI thật. |
-| TASK 03 — Desktop | **BLOCKED nghiệm thu Windows** | UI React/Tauri source có theme và VI/EN; browser workbench chạy được. `cargo metadata` không chạy được vì thiếu cargo. Chưa có Cargo.lock, Rust/native dependency audit, installer hay Windows thật. |
-| TASK 04 — Project Detection | **PASS core/browser; BLOCKED native** | Nhận diện Flutter, iOS runner, Bundle ID, version, lock và lỗi; scenario tests. Native reader cần kiểm tra Windows. |
-| TASK 05 — GitHub Integration | **BLOCKED / chưa triển khai tích hợp** | Có validation tên repo và thiết kế quyền, secure storage, workflow diff/dispatch; chưa có OAuth/PAT store/network integration. Không có đăng nhập giả. |
-| TASK 06 — First Real IPA | **BLOCKED** | Generator chỉ xuất workflow nháp unsigned `.app`; chưa chạy macOS, không có run ID/artifact/IPA. |
-| TASK 07 — Build Log Analyzer | **PASS bộ quy tắc ban đầu; chưa nghiệm thu corpus CI thật** | Phân loại signing/Pods/Xcode/Dart/GitHub/budget/disk; ẩn credential nhận diện được; log lạ không suy ra thành công. |
-| TASK 08–10 — Signing / Device / TestFlight | **BLOCKED / chưa triển khai** | Các mục UI ghi rõ chưa sẵn sàng; không có cài/ký/upload giả. |
-| TASK 11–12 — Release / Community | **BLOCKED / chưa thực hiện** | Không có phát hành công khai hoặc đăng bài cộng đồng. |
+| TASK 01 — Research & Architecture | **PASS** | So sánh repo, snapshot và 3 ADR. [Nghiên cứu](research/TASK-01.vi.md). |
+| TASK 02 — Foundation/GitHub | **PASS trong phạm vi source và CI** | Source MIT trên GitHub, tài liệu/templates, npm lock và manual CI đã chạy thật. |
+| TASK 03 — Desktop Windows | **PASS gate tự động** | Build/test/Clippy và bộ cài cài–mở–native UI–gỡ đạt trong run nêu trên; nghiệm thu máy cá nhân và ký số còn riêng. |
+| TASK 04 — Project Detection | **PASS core/browser/native metadata** | Kiểm tra allowlist, path boundary/junction, Unicode, UTF-8, kích thước và đọc fixture qua Rust trên Windows. Không phải build Flutter thật. |
+| TASK 05 — GitHub Integration | **Chưa triển khai** | Chưa có OAuth/PAT store, network integration, review/dispatch/download trong sản phẩm. |
+| TASK 06 — First Real IPA | **Chưa nghiệm thu** | Chỉ xuất workflow nháp unsigned `.app`; chưa chạy macOS hoặc tạo signed IPA. |
+| TASK 07 — Build Log Analyzer | **PASS bộ quy tắc ban đầu** | Phân loại lỗi offline, redaction và unknown-log handling; corpus CI thật còn thiếu. |
+| TASK 08–10 — Signing / Device / TestFlight | **Chưa triển khai** | Chưa ký IPA, cài iPhone hoặc upload TestFlight. |
+| TASK 11–12 — Release / Community | **Chưa thực hiện** | Chưa phát hành Release hoặc đăng bài cộng đồng. |
 
-## Kiểm thử thực tế
+## Chứng cứ lịch sử và chi phí
 
-- `npm run check`: **PASS**, gồm Biome lint, TypeScript, **71 tests / 3 test files**, Vite production build.
-- `npm audit`: **0 advisory được báo trong lần kiểm tra**, xem [JSON](verification/npm-audit.json). Không diễn giải thành bảo đảm an toàn tuyệt đối.
-- `npm run test:ui`: **PASS 9 nhóm kiểm tra** bằng Chromium `153.0.8010.0`: import thư mục có fixture metadata, render findings, hai chặn xác nhận, tạo và tải YAML, từ chối traversal, ẩn log và không lưu log, locale/theme, viewport nhỏ, không có page error/yêu cầu HTTP ngoài localhost.
-- Browser mặc định của Playwright tải lỗi; đã dùng Chromium từ package QA riêng để chạy thành công. Không bundle browser QA vào repo/installer. Script hỗ trợ `BRIDGE_BROWSER_EXECUTABLE`; đây không phải kiểm thử Windows WebView2.
-- `npm run tauri -- build --no-bundle`: **BLOCKED** tại `cargo metadata` vì môi trường không có cargo. Bốn test Rust trong source **chưa chạy**.
-- Không có kiểm thử iPhone hoặc TestFlight; fixture tối giản không phải Flutter sample build được.
+Bản `0.1.0-dev.1` trước khi đổi logo vẫn có [biên nhận riêng](verification/windows-native-20261103.json). Biên nhận mới ở trên thuộc bản `0.1.0-dev.2`.
 
-Chứng cứ kiểm thử cục bộ trước lần công khai: [manifest](verification/manifest.json), [local checks](verification/local-checks.txt), [production build](verification/build-check.txt), [browser checks](verification/browser-smoke.json). Chúng xác nhận mã nền trong lịch sử local, không phải kết quả GitHub Actions. QA screenshots chỉ dùng để kiểm tra nội bộ, không nằm trong gói giao.
+[Manifest](verification/manifest.json), [local checks](verification/local-checks.txt), [production build](verification/build-check.txt) và [browser checks](verification/browser-smoke.json) là bằng chứng mã nền cục bộ trước khi công khai source. [Native preflight](verification/task03-native-preflight.json) là trạng thái trước Windows CI; không thay cho biên nhận cuối ở trên.
 
-## Chi phí và rủi ro còn lại
+CI đã duyệt chỉ dùng standard GitHub-hosted Ubuntu/Windows runner cho repository công khai, quyền đọc, không cache upload, artifact tối đa 51 MiB và một ngày. Không tạo tài nguyên trả phí, không chạy macOS, không gửi signing assets hoặc phát hành Release. Billing/storage vẫn phải rà soát trước lần chạy mới.
 
-**Chi phí dịch vụ bên ngoài phát sinh: $0.** Không tạo tài nguyên trả phí, không chạy GitHub Actions, không gửi signing assets. Thời gian/compute trong phiên làm việc không phải báo giá CI.
+## Bước tiếp theo
 
-Rủi ro chính: Rust/Tauri và native dependencies chưa compile/audit; trình duyệt không thay WebView2; chưa xác minh Flutter/Xcode/plugin trên runner; redaction có thể bỏ sót secret chưa nhận diện; signed lane và tải/xác thực artifact chưa triển khai. Bản nguồn hiện tại dùng cho phát triển, chưa quảng bá là ứng dụng Windows đã hoạt động toàn bộ.
-
-## Bước tiếp theo cụ thể
-
-Tiếp đến là gate Windows (Cargo.lock, fmt/test/clippy, installer), rồi TASK 05 — tích hợp GitHub trong ứng dụng. Chỉ source của dự án mới được công khai, không có source ứng dụng riêng hoặc signing material. Việc tạo repo và đưa source lên không tự đồng ý chạy CI hay phát hành Release.
-
-Khi có quyền chạy CI, tạo Flutter sample thật và nghiệm thu unsigned compile trước; TASK 06 chỉ PASS khi có **IPA ký thật**, log/run ID và artifact tải về được kiểm chứng theo [ACCEPTANCE.md](ACCEPTANCE.md).
+PR Windows được chuẩn bị để review. Tiếp theo về chức năng là TASK 05 — tích hợp GitHub trong ứng dụng. Một lượt build macOS thật cần dự án Flutter hoàn chỉnh, source SHA, workflow và chi phí được duyệt; TASK 06 chỉ PASS khi có signed IPA thật được tải và kiểm chứng theo [ACCEPTANCE.md](ACCEPTANCE.md).

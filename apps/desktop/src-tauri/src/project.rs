@@ -64,13 +64,19 @@ pub fn read_metadata(root: &Path) -> Result<Vec<ProjectFile>, String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::sync::atomic::{AtomicU64, Ordering};
     use std::time::{SystemTime, UNIX_EPOCH};
+    static NEXT_TEST_ID: AtomicU64 = AtomicU64::new(0);
     fn temp() -> std::path::PathBuf {
         let id = SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .unwrap()
             .as_nanos();
-        let p = std::env::temp_dir().join(format!("bridge-test-{}-{id}", std::process::id()));
+        let sequence = NEXT_TEST_ID.fetch_add(1, Ordering::Relaxed);
+        let p = std::env::temp_dir().join(format!(
+            "bridge-test-{}-{id}-{sequence}",
+            std::process::id()
+        ));
         fs::create_dir_all(&p).unwrap();
         p
     }
@@ -87,7 +93,11 @@ mod tests {
     #[test]
     fn rejects_large_metadata() {
         let root = temp();
-        fs::write(root.join("pubspec.yaml"), vec![b'x'; MAX_BYTES as usize + 1]).unwrap();
+        fs::write(
+            root.join("pubspec.yaml"),
+            vec![b'x'; MAX_BYTES as usize + 1],
+        )
+        .unwrap();
         assert!(read_metadata(&root).is_err());
         fs::remove_dir_all(root).unwrap();
     }
@@ -96,6 +106,54 @@ mod tests {
         let root = temp();
         fs::remove_dir_all(&root).unwrap();
         assert!(read_metadata(&root).is_err());
+    }
+    #[test]
+    fn reads_nested_metadata_with_unicode_folder_name() {
+        let root = temp().join("Dự án Flutter");
+        fs::create_dir_all(root.join("ios/Runner.xcodeproj")).unwrap();
+        fs::write(
+            root.join("ios/Runner.xcodeproj/project.pbxproj"),
+            "PRODUCT_BUNDLE_IDENTIFIER = net.douvi.test;",
+        )
+        .unwrap();
+        let files = read_metadata(&root).unwrap();
+        assert_eq!(files.len(), 1);
+        assert_eq!(files[0].path, "ios/Runner.xcodeproj/project.pbxproj");
+        fs::remove_dir_all(root.parent().unwrap()).unwrap();
+    }
+    #[test]
+    fn rejects_non_utf8_metadata() {
+        let root = temp();
+        fs::write(root.join("pubspec.yaml"), [0xff, 0xfe]).unwrap();
+        assert!(read_metadata(&root).is_err());
+        fs::remove_dir_all(root).unwrap();
+    }
+    #[test]
+    fn rejects_directory_in_place_of_metadata() {
+        let root = temp();
+        fs::create_dir(root.join("pubspec.yaml")).unwrap();
+        assert!(read_metadata(&root).is_err());
+        fs::remove_dir_all(root).unwrap();
+    }
+    #[cfg(windows)]
+    #[test]
+    fn rejects_external_windows_junction() {
+        let root = temp();
+        let outside = temp();
+        fs::write(outside.join("Podfile"), "must not reach the renderer").unwrap();
+        let junction = root.join("ios");
+        let status = std::process::Command::new("cmd")
+            .args(["/C", "mklink", "/J"])
+            .arg(&junction)
+            .arg(&outside)
+            .status()
+            .unwrap();
+        assert!(status.success(), "Windows junction creation failed");
+        let result = read_metadata(&root);
+        fs::remove_dir(&junction).unwrap();
+        fs::remove_dir_all(root).unwrap();
+        fs::remove_dir_all(outside).unwrap();
+        assert!(result.is_err());
     }
     #[cfg(unix)]
     #[test]

@@ -29,4 +29,4 @@ Store repository/ref and full source SHA, workflow revision, unique run ID/URL, 
 4. Download the nonempty unsigned `.app` archive, inspect the arm64 executable and hash. Record this as compile-only evidence.
 5. Implement and review signed export using the developer's own signing assets and ephemeral keychain; repeat with signature verification. Only then consider TASK 06 PASS.
 
-No CI run, signing upload or external cost was initiated while preparing this foundation.
+The initial foundation was prepared without CI execution. Subsequent Windows verification is recorded in the [native receipt](verification/windows-branding-20261103.json) and [progress](PROGRESS.md). No macOS run, signing upload or public Release is covered by that Windows result.
