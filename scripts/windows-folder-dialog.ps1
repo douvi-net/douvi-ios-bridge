@@ -7,10 +7,17 @@ param(
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName UIAutomationClient
 Add-Type -AssemblyName UIAutomationTypes
+Add-Type -AssemblyName System.Windows.Forms
 Add-Type @'
 using System;
 using System.Runtime.InteropServices;
 public static class FolderDialogNative {
+    [DllImport("user32.dll")]
+    public static extern bool SetForegroundWindow(IntPtr window);
+    [DllImport("user32.dll")]
+    public static extern IntPtr GetForegroundWindow();
+    [DllImport("user32.dll")]
+    public static extern bool IsChild(IntPtr parent, IntPtr child);
     [DllImport("user32.dll")]
     public static extern uint GetWindowThreadProcessId(IntPtr window, out uint processId);
     [DllImport("user32.dll", SetLastError = true)]
@@ -30,6 +37,14 @@ function Get-OwnedWindow($element) {
         throw 'The dialog control has no native window owned by the tested application.'
     }
     return $window
+}
+
+function Send-DialogKeys([string]$keys) {
+    [void][FolderDialogNative]::SetForegroundWindow($dialogWindow)
+    if ([FolderDialogNative]::GetForegroundWindow() -ne $dialogWindow) {
+        throw 'The tested folder dialog could not receive keyboard focus.'
+    }
+    [System.Windows.Forms.SendKeys]::SendWait($keys)
 }
 
 # Only the app started by windows-smoke.mjs is eligible for interaction.
@@ -66,12 +81,38 @@ if ($Mode -eq 'Cancel') {
         [System.Windows.Automation.AutomationElement]::ControlTypeProperty,
         [System.Windows.Automation.ControlType]::Edit
     )
-    $edits = @($dialog.FindAll([System.Windows.Automation.TreeScope]::Descendants, $editCondition))
-    $folderEdit = $edits | Where-Object { $_.Current.Name -in @('Folder:', 'File name:') } | Select-Object -First 1
-    if ($null -eq $folderEdit -and $edits.Count -eq 1) { $folderEdit = $edits[0] }
+    # The shell populates its controls asynchronously. Some folder-picker layouts
+    # omit the bottom Folder field entirely; use their normal address bar instead.
+    $editDeadline = [DateTime]::UtcNow.AddSeconds(4)
+    $folderEdit = $null
+    while ([DateTime]::UtcNow -lt $editDeadline) {
+        $edits = @($dialog.FindAll([System.Windows.Automation.TreeScope]::Descendants, $editCondition))
+        $folderEdit = $edits | Where-Object {
+            $_.Current.Name -match '^(Folder|File name):?$' -and -not $_.Current.IsOffscreen
+        } | Select-Object -First 1
+        if ($null -ne $folderEdit) { break }
+        Start-Sleep -Milliseconds 200
+    }
+    $useAddressBar = $null -eq $folderEdit
+    if ($useAddressBar) {
+        Send-DialogKeys '%d'
+        $editDeadline = [DateTime]::UtcNow.AddSeconds(4)
+        while ([DateTime]::UtcNow -lt $editDeadline) {
+            $focused = [System.Windows.Automation.AutomationElement]::FocusedElement
+            if ($focused.Current.ProcessId -eq $ApplicationProcessId -and
+                $focused.Current.ControlType -eq [System.Windows.Automation.ControlType]::Edit) {
+                $focusedWindow = Get-OwnedWindow $focused
+                if ([FolderDialogNative]::IsChild($dialogWindow, $focusedWindow)) {
+                    $folderEdit = $focused
+                    break
+                }
+            }
+            Start-Sleep -Milliseconds 200
+        }
+    }
     if ($null -eq $folderEdit) {
-        $names = @($edits | ForEach-Object { $_.Current.Name }) -join ', '
-        throw "Cannot identify the native folder field. Available edit labels: $names"
+        $names = @($edits | ForEach-Object { "$($_.Current.Name) [$($_.Current.AutomationId)]" }) -join ', '
+        throw "Cannot identify the native folder or address field. Available edits: $names"
     }
     $directory = (Resolve-Path -LiteralPath $ProjectDirectory).Path
     $valuePattern = $null
@@ -88,15 +129,30 @@ if ($Mode -eq 'Cancel') {
             throw 'Cannot enter the fixture path in the native folder field.'
         }
     }
+    if ($useAddressBar) {
+        Send-DialogKeys '{ENTER}'
+        # Wait for the shell to finish navigation before confirming the directory.
+        $navigationDeadline = [DateTime]::UtcNow.AddSeconds(5)
+        while ([DateTime]::UtcNow -lt $navigationDeadline) {
+            try {
+                if ($folderEdit.Current.IsOffscreen) { break }
+            } catch [System.Windows.Automation.ElementNotAvailableException] { break }
+            Start-Sleep -Milliseconds 200
+        }
+    }
 
     $buttonCondition = [System.Windows.Automation.PropertyCondition]::new(
         [System.Windows.Automation.AutomationElement]::ControlTypeProperty,
         [System.Windows.Automation.ControlType]::Button
     )
     $buttons = @($dialog.FindAll([System.Windows.Automation.TreeScope]::Descendants, $buttonCondition))
-    $button = $buttons | Where-Object { $_.Current.Name -in @('Select Folder', 'Open') } | Select-Object -First 1
+    $button = $buttons | Where-Object {
+        $_.Current.Name -in @('Select Folder', 'Open') -and $_.Current.IsEnabled -and -not $_.Current.IsOffscreen
+    } | Select-Object -First 1
     if ($null -eq $button) {
-        $button = $buttons | Where-Object { $_.Current.AutomationId -eq '1' } | Select-Object -First 1
+        $button = $buttons | Where-Object {
+            $_.Current.AutomationId -eq '1' -and $_.Current.IsEnabled -and -not $_.Current.IsOffscreen
+        } | Select-Object -First 1
     }
     if ($null -eq $button) {
         $labels = @($buttons | ForEach-Object { "$($_.Current.Name) [$($_.Current.AutomationId)]" }) -join ', '

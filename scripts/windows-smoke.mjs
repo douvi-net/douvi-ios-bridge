@@ -106,7 +106,7 @@ async function dialog(page, mode, trigger) {
       "-ProjectDirectory",
       resolve("tests/fixtures/flutter-project"),
     ],
-    40_000,
+    60_000,
   );
   // Attach a handler immediately, including when triggering the dialog fails.
   const result = pilot.then(
