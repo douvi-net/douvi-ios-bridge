@@ -64,13 +64,19 @@ pub fn read_metadata(root: &Path) -> Result<Vec<ProjectFile>, String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::sync::atomic::{AtomicU64, Ordering};
     use std::time::{SystemTime, UNIX_EPOCH};
+    static NEXT_TEST_ID: AtomicU64 = AtomicU64::new(0);
     fn temp() -> std::path::PathBuf {
         let id = SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .unwrap()
             .as_nanos();
-        let p = std::env::temp_dir().join(format!("bridge-test-{}-{id}", std::process::id()));
+        let sequence = NEXT_TEST_ID.fetch_add(1, Ordering::Relaxed);
+        let p = std::env::temp_dir().join(format!(
+            "bridge-test-{}-{id}-{sequence}",
+            std::process::id()
+        ));
         fs::create_dir_all(&p).unwrap();
         p
     }
