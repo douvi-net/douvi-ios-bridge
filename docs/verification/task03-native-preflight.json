@@ -1,0 +1,32 @@
+{
+  "stage": "Preflight before Windows CI, not native build acceptance",
+  "rust": "1.99.1",
+  "cargo_audit": "0.22.2",
+  "target": "x86_64-pc-windows-msvc",
+  "windows_registry_packages": 247,
+  "rustsec_vulnerabilities": 0,
+  "informational_warnings": [
+    {
+      "id": "RUSTSEC-2024-0370",
+      "crate": "proc-macro-error",
+      "version": "1.0.4",
+      "kind": "unmaintained",
+      "selected_in_windows_graph": false
+    },
+    {
+      "id": "RUSTSEC-2024-0429",
+      "crate": "glib",
+      "version": "0.18.5",
+      "kind": "unsound",
+      "selected_in_windows_graph": false
+    }
+  ],
+  "checks": {
+    "javascript_lint_typecheck_71_tests_build": "PASS",
+    "rustfmt": "PASS",
+    "cargo_metadata_locked_windows": "PASS",
+    "bundled_upstream_notices_252_packages": "PASS",
+    "windows_build_install_launch_uninstall": "NOT_RUN"
+  },
+  "source_license_inventory": "../../apps/desktop/src-tauri/notices/inventory.json (generated; bundled in installer)"
+}

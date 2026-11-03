@@ -1,4 +1,8 @@
 name: Foundation checks (manual)
+run-name: Verification ${{ inputs.reviewed_source_sha }}
+concurrency:
+  group: foundation-${{ github.ref }}
+  cancel-in-progress: false
 on:
   workflow_dispatch:
     inputs:
@@ -12,11 +16,15 @@ on:
         required: true
         type: boolean
         default: false
+      reviewed_source_sha:
+        description: Full reviewed commit SHA; execution stops if the branch has moved
+        required: true
+        type: string
 permissions:
   contents: read
 jobs:
   javascript:
-    if: ${{ inputs.confirm_ci_cost }}
+    if: ${{ inputs.confirm_ci_cost && !github.event.repository.private }}
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
@@ -26,13 +34,18 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '24'
+      - name: Verify reviewed source
+        env:
+          REVIEWED_SOURCE_SHA: ${{ inputs.reviewed_source_sha }}
+        run: node -e "if(!/^[0-9a-f]{40}$/.test(process.env.REVIEWED_SOURCE_SHA)||process.env.REVIEWED_SOURCE_SHA!==process.env.GITHUB_SHA)process.exit(1)"
       - run: npm ci
       - run: npm run check
       - run: npm audit --audit-level=high
       - run: npx --no-install playwright install --with-deps chromium
       - run: npm run test:ui
   windows-native:
-    if: ${{ inputs.confirm_ci_cost && inputs.verify_windows }}
+    needs: javascript
+    if: ${{ inputs.confirm_ci_cost && inputs.verify_windows && !github.event.repository.private }}
     runs-on: windows-2022
     timeout-minutes: 45
     steps:
@@ -42,19 +55,38 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '24'
+      - name: Verify reviewed source
+        env:
+          REVIEWED_SOURCE_SHA: ${{ inputs.reviewed_source_sha }}
+        run: node -e "if(!/^[0-9a-f]{40}$/.test(process.env.REVIEWED_SOURCE_SHA)||process.env.REVIEWED_SOURCE_SHA!==process.env.GITHUB_SHA)process.exit(1)"
       - run: npm ci
       - name: Record Rust toolchain
-        run: rustc --version; cargo --version
-      - run: cargo generate-lockfile --manifest-path apps/desktop/src-tauri/Cargo.toml
+        run: |
+          New-Item -ItemType Directory -Force test-results/windows | Out-Null
+          rustup show active-toolchain
+          rustc --version | Tee-Object -FilePath test-results/windows/toolchain.txt
+          cargo --version | Tee-Object -FilePath test-results/windows/toolchain.txt -Append
+          "Windows: $([Environment]::OSVersion.VersionString)" | Tee-Object -FilePath test-results/windows/toolchain.txt -Append
+          "Image: $env:ImageOS $env:ImageVersion" | Tee-Object -FilePath test-results/windows/toolchain.txt -Append
       - run: cargo fmt --manifest-path apps/desktop/src-tauri/Cargo.toml --check
-      - run: cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml
-      - run: cargo clippy --manifest-path apps/desktop/src-tauri/Cargo.toml -- -D warnings
-      - run: npm run tauri -- build
+      - run: cargo test --locked --manifest-path apps/desktop/src-tauri/Cargo.toml
+      - run: cargo clippy --locked --all-targets --manifest-path apps/desktop/src-tauri/Cargo.toml -- -D warnings
+      - name: Build unsigned development NSIS installer
+        id: build
+        run: npm run tauri -- build -- --locked
+      - name: Install, launch, native IPC, locale, theme and uninstall
+        run: npm run test:windows
+      - name: Enforce artifact storage bound
+        id: artifact_bound
+        if: ${{ always() && steps.build.outcome == 'success' }}
+        run: |
+          $bytes = (Get-ChildItem test-results/windows -File -Recurse | Measure-Object -Property Length -Sum).Sum
+          if ($bytes -gt 51MB) { throw 'Artifact exceeds the reviewed 51 MiB storage bound.' }
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ always() && steps.artifact_bound.outcome == 'success' }}
         with:
-          name: windows-development-build
-          path: |
-            apps/desktop/src-tauri/target/release/bundle/nsis/*
-            apps/desktop/src-tauri/Cargo.lock
+          name: windows-development-${{ github.run_id }}-${{ github.run_attempt }}
+          path: test-results/windows/
           if-no-files-found: error
           retention-days: 1
+          compression-level: 0

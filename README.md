@@ -21,7 +21,7 @@ The browser UI is a development/testing surface for the desktop app. It is not a
 
 ## Windows desktop development
 
-Install the [Tauri prerequisites](https://v2.tauri.app/start/prerequisites/): Microsoft C++ Build Tools, WebView2 and stable Rust with the MSVC toolchain. Then:
+Install the [Tauri prerequisites](https://v2.tauri.app/start/prerequisites/): Microsoft C++ Build Tools, WebView2 and Rustup with the MSVC toolchain. The repository pins Rust 1.99.1 and its resolved dependencies. Then:
 
 ```powershell
 npm ci
@@ -31,13 +31,14 @@ npm run tauri -- dev
 For a development NSIS build, after completing native checks:
 
 ```powershell
-cargo generate-lockfile --manifest-path apps/desktop/src-tauri/Cargo.toml
 cargo fmt --manifest-path apps/desktop/src-tauri/Cargo.toml --check
-cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml
-npm run tauri -- build
+cargo test --locked --manifest-path apps/desktop/src-tauri/Cargo.toml
+cargo clippy --locked --all-targets --manifest-path apps/desktop/src-tauri/Cargo.toml -- -D warnings
+npm run tauri -- build -- --locked
+npm run test:windows
 ```
 
-Commit the resolved `Cargo.lock` after review. Rust dependencies and the Windows installer remain unverified in the current environment, which has no Rust toolchain or Windows host. Do not publish this as a tested desktop release.
+The build bundles upstream license texts and their exact dependency inventory. See [Windows verification](docs/WINDOWS.md) and [progress](docs/PROGRESS.md) for actual build/install results and remaining limits. A local web check or Rust dependency preflight does not constitute Windows acceptance.
 
 ## Build outputs mean different things
 

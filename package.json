@@ -19,7 +19,9 @@
     "test:watch": "vitest",
     "tauri": "cd apps/desktop && tauri",
     "check": "npm run lint && npm run typecheck && npm test && npm run build",
-    "test:ui": "node scripts/browser-smoke.mjs"
+    "test:ui": "node scripts/browser-smoke.mjs",
+    "test:windows": "node scripts/windows-smoke.mjs",
+    "licenses:bundle": "node scripts/bundle-notices.mjs"
   },
   "dependencies": {
     "@tauri-apps/api": "2.12.4",

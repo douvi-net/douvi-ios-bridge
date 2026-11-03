@@ -17,3 +17,4 @@ test-results/
 *.xcarchive/
 .DS_Store
 apps/desktop/src-tauri/gen/
+apps/desktop/src-tauri/notices/

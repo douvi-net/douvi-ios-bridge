@@ -20,7 +20,9 @@ MIT in this repository covers original Douvi source only. Dependency licenses ar
 
 Versions and license identifiers above were read from the installed packages. `package-lock.json` records dependency integrity, including optional platform binaries. [npm-license-inventory.json](docs/research/npm-license-inventory.json) records the package metadata found in the local install; it is an inventory, not full notice text or a legal conclusion. Before distribution generate the complete notices from the exact dependency tree and include license/NOTICE texts, including applicable transitive components.
 
-Rust declares Tauri, tauri-build, tauri-plugin-dialog and serde. They must be resolved to a reviewed Cargo.lock and audited, including native/transitive libraries, before shipping. No Rust build/dependency audit has passed in this environment. The Windows native build is blocked by the absent Rust toolchain; no native binary is distributed in this source package.
+Rust dependencies are resolved in `apps/desktop/src-tauri/Cargo.lock` and the toolchain is pinned in `rust-toolchain.toml`. The [native preflight](docs/verification/task03-native-preflight.json) records a RustSec audit with zero vulnerability entries and two informational warnings (`glib` unsoundness and unmaintained `proc-macro-error`); neither package is selected in the Windows dependency graph. This is not a blanket security guarantee or a native build result.
+
+Before bundling, `npm run licenses:bundle` reads the locked Windows Cargo graph and npm production packages and preserves their upstream license/NOTICE files in the installer's `notices/` directory. Version-specific missing crate license files are preserved from upstream in `third_party/licenses/`, with sources and SHA-256 values in `third_party/license-overrides.json`. The generated inventory intentionally includes native build dependencies. Re-run the generator and review notices whenever dependencies change; it fails if a package lacks the expected upstream license text. No crate patches are applied.
 
 ## Researched, not bundled
 

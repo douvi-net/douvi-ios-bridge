@@ -5,7 +5,7 @@ description = "Local-first Windows workbench for Flutter iOS builds"
 authors = ["Douvi Labs"]
 license = "MIT"
 edition = "2021"
-rust-version = "1.85"
+rust-version = "1.99"
 
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
@@ -15,5 +15,4 @@ tauri = { version = "2", features = [] }
 tauri-plugin-dialog = "2"
 serde = { version = "1", features = ["derive"] }
 
-# Resolve and commit Cargo.lock on the first native verification machine.
-# No native build or dependency audit is claimed before that gate.
+# Cargo.lock and rust-toolchain.toml pin the native verification inputs.

@@ -3,7 +3,9 @@
 mod project;
 
 #[tauri::command]
-async fn choose_project(app: tauri::AppHandle) -> Result<Option<Vec<project::ProjectFile>>, String> {
+async fn choose_project(
+    app: tauri::AppHandle,
+) -> Result<Option<Vec<project::ProjectFile>>, String> {
     use tauri_plugin_dialog::DialogExt;
     tauri::async_runtime::spawn_blocking(move || {
         let selected = app.dialog().file().blocking_pick_folder();

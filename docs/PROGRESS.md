@@ -1,6 +1,12 @@
 # Tiến độ Douvi iOS Bridge — 03/11/2026
 
-Repository chính thức: https://github.com/douvi-net/douvi-ios-bridge, **Public, MIT**, theo phê duyệt của chủ tài khoản. Bản mã nền công khai gồm 73 tệp được theo dõi, bao gồm source, icon, test, fixture, nghiên cứu và tài liệu nghiệm thu. Các commit rút gọn bên dưới thuộc lịch sử local có trong gói bàn giao ban đầu; lịch sử commit trên GitHub được tạo khi công khai source. **Chưa chạy CI, chưa phát hành installer, chưa có IPA thật.**
+Repository chính thức: https://github.com/douvi-net/douvi-ios-bridge, **Public, MIT**, theo phê duyệt của chủ tài khoản. Bản mã nền công khai ban đầu gồm 73 tệp được theo dõi, bao gồm source, icon, test, fixture, nghiên cứu và tài liệu nghiệm thu. Các commit rút gọn bên dưới thuộc lịch sử local có trong gói bàn giao ban đầu; lịch sử commit trên GitHub được tạo khi công khai source. **Chưa có IPA thật; không có public Release.**
+
+## TASK 03 — Chuẩn bị nghiệm thu Windows
+
+Nhánh `task03/windows-installer` bổ sung Rust 1.99.1, Cargo.lock, native path-boundary tests (bao gồm Windows junction), NSIS per-user, upstream notices đi kèm installer và bộ smoke test cài/mở/IPC/chọn thư mục/theme/VI/gỡ cài đặt. Kiểm tra cục bộ đạt lint/typecheck/71 tests/build web, rustfmt, metadata locked cho Windows và tạo đủ notices cho 252 package. [Native preflight](verification/task03-native-preflight.json), [hướng dẫn Windows](WINDOWS.md).
+
+**Windows CI và installer chưa được nghiệm thu ở thời điểm chuẩn bị nhánh.** Chỉ cập nhật PASS sau khi có run ID, native job thành công và artifact/hash thật. Kiểm thử Windows 10/11 trên máy cá nhân và ký Authenticode vẫn là gate riêng.
 
 | Hạng mục | Kết quả | Bằng chứng và giới hạn |
 | --- | --- | --- |
