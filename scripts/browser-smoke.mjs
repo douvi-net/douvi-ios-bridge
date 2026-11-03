@@ -3,6 +3,7 @@ import { spawn } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { stripVTControlCharacters } from "node:util";
 import { chromium } from "playwright";
 
 const origin = "http://127.0.0.1:4173";
@@ -36,7 +37,7 @@ try {
   for (let i = 0; i < 100; i++) {
     if (server.exitCode !== null) throw new Error(`Preview exited: ${serverOutput}`);
     try {
-      const r = serverOutput.includes(origin)
+      const r = stripVTControlCharacters(serverOutput).includes(origin)
         ? await fetch(origin, { signal: AbortSignal.timeout(1000) })
         : null;
       if (r?.ok) {
@@ -48,7 +49,7 @@ try {
     }
     await new Promise((resolveWait) => setTimeout(resolveWait, 150));
   }
-  assert(started, "Production preview did not start.");
+  assert(started, `Production preview did not start: ${stripVTControlCharacters(serverOutput)}`);
   browser = await chromium.launch({
     headless: true,
     executablePath: process.env.BRIDGE_BROWSER_EXECUTABLE || undefined,
