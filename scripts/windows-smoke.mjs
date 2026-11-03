@@ -199,18 +199,19 @@ try {
   page.on("pageerror", (error) => errors.push(error.message));
   await page.getByRole("heading", { name: "Your code. Your iOS build." }).waitFor();
   assert(await page.evaluate(() => !!window.__TAURI_INTERNALS__));
+  assert.equal(await page.locator('input[type="file"]').count(), 0);
   report.webview_version = browser.version();
   report.checks.push("installed release app launches; real Tauri WebView2 renders the workbench");
 
   await dialog(page, "Cancel", () =>
-    page.getByRole("button", { name: "Open Flutter project", exact: true }).click(),
+    page.locator("button.primary").filter({ hasText: "Open Flutter project" }).click(),
   );
   await page.getByRole("heading", { name: "Your code. Your iOS build." }).waitFor();
   report.checks.push("native folder dialog opens and cancellation leaves no project");
   await dialog(page, "Cancel", () => page.locator(".drop-zone").dispatchEvent("drop"));
   report.checks.push("native drop handler uses the scoped folder dialog");
   await dialog(page, "Select", () =>
-    page.getByRole("button", { name: "Open Flutter project", exact: true }).click(),
+    page.locator("button.primary").filter({ hasText: "Open Flutter project" }).click(),
   );
   await page.getByRole("heading", { name: "bridge_example", exact: true }).waitFor();
   assert(await page.getByText("net.douvi.bridgeexample", { exact: true }).isVisible());
