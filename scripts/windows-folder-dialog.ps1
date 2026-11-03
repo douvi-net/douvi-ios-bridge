@@ -11,7 +11,21 @@ Add-Type -AssemblyName System.Windows.Forms
 Add-Type @'
 using System;
 using System.Runtime.InteropServices;
+using System.Text;
 public static class FolderDialogNative {
+    [StructLayout(LayoutKind.Sequential)]
+    public struct Rect { public int left, top, right, bottom; }
+    [StructLayout(LayoutKind.Sequential)]
+    public struct GuiThreadInfo {
+        public int cbSize;
+        public uint flags;
+        public IntPtr active, focus, capture, menuOwner, moveSize, caret;
+        public Rect caretRect;
+    }
+    [DllImport("user32.dll", SetLastError = true)]
+    public static extern bool GetGUIThreadInfo(uint threadId, ref GuiThreadInfo info);
+    [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+    public static extern int GetClassName(IntPtr window, StringBuilder name, int count);
     [DllImport("user32.dll")]
     public static extern bool SetForegroundWindow(IntPtr window);
     [DllImport("user32.dll")]
@@ -25,6 +39,33 @@ public static class FolderDialogNative {
     [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
     public static extern IntPtr SendMessageTimeout(IntPtr window, uint message, IntPtr wParam,
         string lParam, uint flags, uint timeout, out IntPtr result);
+
+    public static IntPtr FocusedDialogEdit(IntPtr dialog, uint expectedProcess) {
+        uint process;
+        uint thread = GetWindowThreadProcessId(dialog, out process);
+        if (thread == 0 || process != expectedProcess) return IntPtr.Zero;
+        var info = new GuiThreadInfo();
+        info.cbSize = Marshal.SizeOf(typeof(GuiThreadInfo));
+        if (!GetGUIThreadInfo(thread, ref info) || !IsChild(dialog, info.focus)) return IntPtr.Zero;
+        GetWindowThreadProcessId(info.focus, out process);
+        var name = new StringBuilder(256);
+        GetClassName(info.focus, name, name.Capacity);
+        return process == expectedProcess && name.ToString() == "Edit" ? info.focus : IntPtr.Zero;
+    }
+
+    public static string FocusDescription(IntPtr dialog, uint expectedProcess) {
+        uint process;
+        uint thread = GetWindowThreadProcessId(dialog, out process);
+        var info = new GuiThreadInfo();
+        info.cbSize = Marshal.SizeOf(typeof(GuiThreadInfo));
+        if (thread == 0 || process != expectedProcess) return "dialog owner changed";
+        if (!GetGUIThreadInfo(thread, ref info)) return "GUI thread error " + Marshal.GetLastWin32Error();
+        GetWindowThreadProcessId(info.focus, out process);
+        if (process != expectedProcess) return "focus is outside the tested application";
+        var name = new StringBuilder(256);
+        GetClassName(info.focus, name, name.Capacity);
+        return "focus class=" + name + "; dialog child=" + IsChild(dialog, info.focus);
+    }
 }
 '@
 
@@ -77,96 +118,41 @@ if ($Mode -eq 'Cancel') {
     if (-not (Test-Path -LiteralPath $ProjectDirectory -PathType Container)) {
         throw 'The public metadata fixture directory is missing.'
     }
-    $editCondition = [System.Windows.Automation.PropertyCondition]::new(
-        [System.Windows.Automation.AutomationElement]::ControlTypeProperty,
-        [System.Windows.Automation.ControlType]::Edit
-    )
-    # The shell populates its controls asynchronously. Some folder-picker layouts
-    # omit the bottom Folder field entirely; use their normal address bar instead.
-    $editDeadline = [DateTime]::UtcNow.AddSeconds(4)
-    $folderEdit = $null
+    # Use the shell's normal address-bar shortcut. The managed UIA proxy on
+    # hosted Windows can omit/misidentify shell edits, so identify the focused
+    # native Edit by its GUI thread, process and parent dialog instead.
+    Send-DialogKeys '%d'
+    $editDeadline = [DateTime]::UtcNow.AddSeconds(5)
+    $editWindow = [IntPtr]::Zero
     while ([DateTime]::UtcNow -lt $editDeadline) {
-        $edits = @($dialog.FindAll([System.Windows.Automation.TreeScope]::Descendants, $editCondition))
-        $folderEdit = $edits | Where-Object {
-            $_.Current.Name -match '^(Folder|File name):?$' -and -not $_.Current.IsOffscreen
-        } | Select-Object -First 1
-        if ($null -ne $folderEdit) { break }
+        $editWindow = [FolderDialogNative]::FocusedDialogEdit($dialogWindow, $ApplicationProcessId)
+        if ($editWindow -ne [IntPtr]::Zero) { break }
         Start-Sleep -Milliseconds 200
     }
-    $useAddressBar = $null -eq $folderEdit
-    if ($useAddressBar) {
-        Send-DialogKeys '%d'
-        $editDeadline = [DateTime]::UtcNow.AddSeconds(4)
-        while ([DateTime]::UtcNow -lt $editDeadline) {
-            $focused = [System.Windows.Automation.AutomationElement]::FocusedElement
-            if ($focused.Current.ProcessId -eq $ApplicationProcessId -and
-                $focused.Current.ControlType -eq [System.Windows.Automation.ControlType]::Edit) {
-                $focusedWindow = Get-OwnedWindow $focused
-                if ([FolderDialogNative]::IsChild($dialogWindow, $focusedWindow)) {
-                    $folderEdit = $focused
-                    break
-                }
-            }
-            Start-Sleep -Milliseconds 200
-        }
-    }
-    if ($null -eq $folderEdit) {
-        $names = @($edits | ForEach-Object { "$($_.Current.Name) [$($_.Current.AutomationId)]" }) -join ', '
-        throw "Cannot identify the native folder or address field. Available edits: $names"
+    if ($editWindow -eq [IntPtr]::Zero) {
+        $description = [FolderDialogNative]::FocusDescription($dialogWindow, $ApplicationProcessId)
+        throw "The native dialog address edit did not receive focus: $description"
     }
     $directory = (Resolve-Path -LiteralPath $ProjectDirectory).Path
-    $valuePattern = $null
-    if ($folderEdit.TryGetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern, [ref]$valuePattern)) {
-        $valuePattern.SetValue($directory)
-    } else {
-        $editWindow = Get-OwnedWindow $folderEdit
-        $messageResult = [IntPtr]::Zero
-        # WM_SETTEXT, bounded to two seconds; only the identified folder edit is eligible.
-        $sent = [FolderDialogNative]::SendMessageTimeout(
-            $editWindow, 0x000C, [IntPtr]::Zero, $directory, 0x0002, 2000, [ref]$messageResult
-        )
-        if ($sent -eq [IntPtr]::Zero -or $messageResult -eq [IntPtr]::Zero) {
-            throw 'Cannot enter the fixture path in the native folder field.'
-        }
-    }
-    if ($useAddressBar) {
-        Send-DialogKeys '{ENTER}'
-        # Wait for the shell to finish navigation before confirming the directory.
-        $navigationDeadline = [DateTime]::UtcNow.AddSeconds(5)
-        while ([DateTime]::UtcNow -lt $navigationDeadline) {
-            try {
-                if ($folderEdit.Current.IsOffscreen) { break }
-            } catch [System.Windows.Automation.ElementNotAvailableException] { break }
-            Start-Sleep -Milliseconds 200
-        }
-    }
-
-    $buttonCondition = [System.Windows.Automation.PropertyCondition]::new(
-        [System.Windows.Automation.AutomationElement]::ControlTypeProperty,
-        [System.Windows.Automation.ControlType]::Button
+    $messageResult = [IntPtr]::Zero
+    # WM_SETTEXT, bounded to two seconds, on this dialog's focused native Edit.
+    $sent = [FolderDialogNative]::SendMessageTimeout(
+        $editWindow, 0x000C, [IntPtr]::Zero, $directory, 0x0002, 2000, [ref]$messageResult
     )
-    $buttons = @($dialog.FindAll([System.Windows.Automation.TreeScope]::Descendants, $buttonCondition))
-    $button = $buttons | Where-Object {
-        $_.Current.Name -in @('Select Folder', 'Open') -and $_.Current.IsEnabled -and -not $_.Current.IsOffscreen
-    } | Select-Object -First 1
-    if ($null -eq $button) {
-        $button = $buttons | Where-Object {
-            $_.Current.AutomationId -eq '1' -and $_.Current.IsEnabled -and -not $_.Current.IsOffscreen
-        } | Select-Object -First 1
+    if ($sent -eq [IntPtr]::Zero -or $messageResult -eq [IntPtr]::Zero) {
+        throw 'Cannot enter the fixture path in the native address field.'
     }
-    if ($null -eq $button) {
-        $labels = @($buttons | ForEach-Object { "$($_.Current.Name) [$($_.Current.AutomationId)]" }) -join ', '
-        throw "Cannot identify the native folder confirmation button. Available buttons: $labels"
+    Send-DialogKeys '{ENTER}'
+    $navigationDeadline = [DateTime]::UtcNow.AddSeconds(5)
+    while ([DateTime]::UtcNow -lt $navigationDeadline) {
+        if ([FolderDialogNative]::FocusedDialogEdit($dialogWindow, $ApplicationProcessId) -eq [IntPtr]::Zero) { break }
+        Start-Sleep -Milliseconds 200
     }
-    $invokePattern = $null
-    if ($button.TryGetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern, [ref]$invokePattern)) {
-        $invokePattern.Invoke()
-    } else {
-        $buttonWindow = Get-OwnedWindow $button
-        # BM_CLICK on this dialog's actual Button; never match an AutomationId alone.
-        if (-not [FolderDialogNative]::PostMessage($buttonWindow, 0x00F5, [IntPtr]::Zero, [IntPtr]::Zero)) {
-            throw 'Cannot confirm the native folder selection.'
-        }
+    # WM_COMMAND / IDOK is the native dialog confirmation. The caller still
+    # requires the picker result to reach Rust and render the expected fixture.
+    if ((Get-OwnedWindow $dialog) -ne $dialogWindow -or
+        -not [FolderDialogNative]::PostMessage($dialogWindow, 0x0111, [IntPtr]1, [IntPtr]::Zero)) {
+        throw 'Cannot confirm the native folder selection.'
     }
 }
 @{ result = 'PASS'; operation = $Mode; nativeDialog = $true } | ConvertTo-Json -Compress
