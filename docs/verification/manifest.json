@@ -1,0 +1,41 @@
+{
+  "record_scope": "Local foundation verification before GitHub publication; not a GitHub Actions run. See ../PROGRESS.md for publication status.",
+  "source_commit": "9a8ea86abeaba5ad40bba30021bc91d107e920e8",
+  "source_commit_scope": "Original local Git history preserved in the initial handoff bundle; GitHub publication uses separate commits.",
+  "host": "Linux x86_64",
+  "node": "v24.22.1",
+  "npm": "11.9.0",
+  "javascript_checks": {
+    "result": "PASS",
+    "commands": [
+      "npm run lint",
+      "npm run typecheck",
+      "npm test",
+      "npm run build"
+    ],
+    "test_files": 3,
+    "tests_passed": 71,
+    "production_build_evidence": "build-check.txt"
+  },
+  "browser_workbench": {
+    "result": "PASS",
+    "evidence": "browser-smoke.json",
+    "scope": "Browser production build only; metadata-only fixture; no iOS build"
+  },
+  "dependency_audit": {
+    "result": "PASS",
+    "evidence": "npm-audit.json",
+    "scope": "npm advisory audit at verification time; not a complete security audit"
+  },
+  "native_windows": {
+    "result": "BLOCKED",
+    "evidence": "tauri build --no-bundle: failed to run cargo metadata --no-deps --format-version 1: No such file or directory (os error 2)",
+    "reason": "No cargo/rustc or Windows host. No installer/native validation or Cargo.lock generated."
+  },
+  "real_macos_ipa": {
+    "result": "BLOCKED",
+    "reason": "No approved CI dispatch or developer signing assets. No CI run or artifact produced."
+  },
+  "external_ci_or_cloud_cost_incurred_usd": 0,
+  "github_mutations_at_local_verification": []
+}

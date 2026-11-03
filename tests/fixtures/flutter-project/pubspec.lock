@@ -1,0 +1,2 @@
+# Metadata-only test fixture. Not a real resolved Flutter dependency lock.
+packages: {}

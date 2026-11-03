@@ -1,0 +1,44 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> douvi-ios-bridge@0.1.0-dev.1 check
+> npm run lint && npm run typecheck && npm test && npm run build
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> douvi-ios-bridge@0.1.0-dev.1 lint
+> biome check apps/desktop/src packages/core/src tests scripts --error-on-warnings
+
+Checked 25 files in 13ms. No fixes applied.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> douvi-ios-bridge@0.1.0-dev.1 typecheck
+> tsc --noEmit
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> douvi-ios-bridge@0.1.0-dev.1 test
+> vitest run
+
+
+ RUN  v5.1.0 /workspace/scratch/fa5de759f81d/douvi-ios-bridge
+
+
+ Test Files  3 passed (3)
+      Tests  71 passed (71)
+   Start at  15:33:42
+   Duration  204ms (import 51%, tests 26%, transform 18%, worker 5%)
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> douvi-ios-bridge@0.1.0-dev.1 build
+> npm run typecheck && vite build --config apps/desktop/vite.config.ts
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> douvi-ios-bridge@0.1.0-dev.1 typecheck
+> tsc --noEmit
+
+vite v8.3.5 building client environment for production...
+transforming...
+✓ 105 modules transformed.
+rendering chunks...

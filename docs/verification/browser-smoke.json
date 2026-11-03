@@ -1,0 +1,19 @@
+{
+  "result": "PASS",
+  "checked_at": "2026-11-03T06:32:37.491Z",
+  "browser": "153.0.8010.0",
+  "scope": "Production browser workbench only; metadata fixture, no native Windows or remote CI claim",
+  "checks": [
+    "production landing renders",
+    "no project cannot build or generate",
+    "folder file permission -> metadata parser -> actual project findings",
+    "both consent gates -> generate -> actual workflow file download",
+    "config edit invalidates draft; traversal rejected",
+    "offline log classification redacts before display and does not persist log",
+    "Vietnamese and light theme persist; project/log reset on reload",
+    "small viewport has no horizontal overflow",
+    "no page errors and no external HTTP requests"
+  ],
+  "consoleErrors": [],
+  "externalRequests": []
+}

@@ -1,0 +1,2 @@
+// Metadata-only test fixture. Not a buildable Xcode project.
+PRODUCT_BUNDLE_IDENTIFIER = net.douvi.bridgeexample;

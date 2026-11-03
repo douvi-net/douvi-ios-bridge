@@ -25,4 +25,4 @@ Self-hosted runners require separate isolation and cleanup. Do not offer public 
 
 ## Reporting
 
-Before public launch, maintainers must enable GitHub private vulnerability reporting and document the verified contact channel here. That contact is not configured in this local foundation. Do not post secret-bearing reproduction steps or signing material in public issues. Only development `0.1.0-dev.1` is in scope; there is no supported stable release yet.
+GitHub private vulnerability reporting is enabled for this repository. Report suspected vulnerabilities privately at https://github.com/douvi-net/douvi-ios-bridge/security/advisories/new. Do not post secret-bearing reproduction steps or signing material in public issues. Only development `0.1.0-dev.1` is in scope; there is no supported stable release yet.

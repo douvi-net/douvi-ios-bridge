@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "main-window",
+  "description": "Local application window. No generic shell, filesystem or network plugin exposed.",
+  "windows": ["main"],
+  "permissions": ["core:default"]
+}

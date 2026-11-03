@@ -1,0 +1,426 @@
+{
+  "checked_at": "2026-11-03T06:05:42.160237+00:00",
+  "method": "Unauthenticated GitHub REST API; repository metadata, default-branch commit, latest non-prerelease, first eight open issues excluding pull requests. Counts change; a small issue sample is not a quality score.",
+  "repositories": [
+    {
+      "repository": "xtool-org/xtool",
+      "url": "https://github.com/xtool-org/xtool",
+      "archived": false,
+      "stars": 14540,
+      "open_issues_and_prs": 117,
+      "pushed_at": "2026-11-02T21:57:22Z",
+      "default_branch": "main",
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      },
+      "head": {
+        "sha": "2af0b67447d30063235e2adb7bdc77012f431d3a",
+        "date": "2026-11-02T21:57:22Z"
+      },
+      "latest_stable_release": {
+        "tag": "1.24.0",
+        "published_at": "2026-10-26T00:18:19Z",
+        "url": "https://github.com/xtool-org/xtool/releases/tag/1.24.0",
+        "error": null
+      },
+      "open_issue_sample": [
+        {
+          "number": 414,
+          "title": "xtool auth login fails with HTTPClientError.connectTimeout after entering 2FA code on Linux (intermittent TLS stall to gsa.apple.com)",
+          "updated_at": "2026-10-30T11:21:34Z",
+          "url": "https://github.com/xtool-org/xtool/issues/414"
+        },
+        {
+          "number": 407,
+          "title": "2FA code never arrives during xtool setup on 1.24.0, and no workaround works on iOS 27.2",
+          "updated_at": "2026-10-31T05:06:01Z",
+          "url": "https://github.com/xtool-org/xtool/issues/407"
+        }
+      ]
+    },
+    {
+      "repository": "arxdeus/xcross",
+      "url": "https://github.com/arxdeus/xcross",
+      "archived": false,
+      "stars": 149,
+      "open_issues_and_prs": 8,
+      "pushed_at": "2026-11-03T05:27:33Z",
+      "default_branch": "main",
+      "license": {
+        "key": "agpl-3.0",
+        "name": "GNU Affero General Public License v3.0",
+        "spdx_id": "AGPL-3.0",
+        "url": "https://api.github.com/licenses/agpl-3.0",
+        "node_id": "MDc6TGljZW5zZTE="
+      },
+      "head": {
+        "sha": "ebf0f05dae3223d80eaf34b3123dec996e053f42",
+        "date": "2026-10-30T04:03:27Z"
+      },
+      "latest_stable_release": {
+        "tag": "v2.0.9",
+        "published_at": "2026-10-28T17:44:18Z",
+        "url": "https://github.com/arxdeus/xcross/releases/tag/v2.0.9",
+        "error": null
+      },
+      "open_issue_sample": [
+        {
+          "number": 150,
+          "title": "`xcross config validate` could warn when a PATH override shadows the system clang/lld that `xcross flutter doctor` selected",
+          "updated_at": "2026-11-01T17:56:34Z",
+          "url": "https://github.com/arxdeus/xcross/issues/150"
+        },
+        {
+          "number": 149,
+          "title": "IPA has no app icon, launch screen or entitlements (push / associated domains): actool, ibtool and Runner.entitlements are not handled",
+          "updated_at": "2026-11-01T10:53:45Z",
+          "url": "https://github.com/arxdeus/xcross/issues/149"
+        },
+        {
+          "number": 147,
+          "title": "Support iOS 16 and older devices (iPhone 8/X) and fail fast in `xcross flutter run`",
+          "updated_at": "2026-11-01T10:19:22Z",
+          "url": "https://github.com/arxdeus/xcross/issues/147"
+        },
+        {
+          "number": 146,
+          "title": "`xcross flutter build --ipa` produces an unsigned IPA and there is no sign/install command",
+          "updated_at": "2026-11-01T10:19:21Z",
+          "url": "https://github.com/arxdeus/xcross/issues/146"
+        },
+        {
+          "number": 55,
+          "title": "Nix Flake",
+          "updated_at": "2026-08-29T18:17:57Z",
+          "url": "https://github.com/arxdeus/xcross/issues/55"
+        },
+        {
+          "number": 21,
+          "title": "idea: `React Native` support",
+          "updated_at": "2026-10-30T15:14:56Z",
+          "url": "https://github.com/arxdeus/xcross/issues/21"
+        }
+      ]
+    },
+    {
+      "repository": "pwnapplehat/iPASide",
+      "url": "https://github.com/pwnapplehat/iPASide",
+      "archived": false,
+      "stars": 165,
+      "open_issues_and_prs": 3,
+      "pushed_at": "2026-10-29T05:39:19Z",
+      "default_branch": "main",
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      },
+      "head": {
+        "sha": "8334cc8dfe1632c18de7119ca140d38bd12f3f75",
+        "date": "2026-10-29T05:26:16Z"
+      },
+      "latest_stable_release": {
+        "tag": "v1.2.14",
+        "published_at": "2026-10-29T05:39:29Z",
+        "url": "https://github.com/pwnapplehat/iPASide/releases/tag/v1.2.14",
+        "error": null
+      },
+      "open_issue_sample": [
+        {
+          "number": 17,
+          "title": "35: An invalid value 'app name' was provided for the parameter 'appIdName'.",
+          "updated_at": "2026-11-01T06:52:57Z",
+          "url": "https://github.com/pwnapplehat/iPASide/issues/17"
+        },
+        {
+          "number": 14,
+          "title": "Apple error -23782 at GsService2/init on Windows 11 with all built-in Anisette providers",
+          "updated_at": "2026-10-29T05:40:04Z",
+          "url": "https://github.com/pwnapplehat/iPASide/issues/14"
+        },
+        {
+          "number": 12,
+          "title": "Apple ID SMS 2FA fails with HTTP 403 after successful authentication — iPASide 1.2.10",
+          "updated_at": "2026-10-25T18:15:00Z",
+          "url": "https://github.com/pwnapplehat/iPASide/issues/12"
+        }
+      ]
+    },
+    {
+      "repository": "fastlane/fastlane",
+      "url": "https://github.com/fastlane/fastlane",
+      "archived": false,
+      "stars": 42342,
+      "open_issues_and_prs": 669,
+      "pushed_at": "2026-11-02T20:27:16Z",
+      "default_branch": "master",
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      },
+      "head": {
+        "sha": "c5e050ce7d2120d27ea81529f3355c83f8b1a0b9",
+        "date": "2026-11-02T20:09:50Z"
+      },
+      "latest_stable_release": {
+        "tag": "2.241.2",
+        "published_at": "2026-10-26T15:31:16Z",
+        "url": "https://github.com/fastlane/fastlane/releases/tag/2.241.2",
+        "error": null
+      },
+      "open_issue_sample": [
+        {
+          "number": 30510,
+          "title": "git_remote_branch: choose the remote from git config, and read its default branch independent of locale",
+          "updated_at": "2026-11-01T22:11:44Z",
+          "url": "https://github.com/fastlane/fastlane/issues/30510"
+        },
+        {
+          "number": 30503,
+          "title": "Audit what actions declare about their options against what they actually require",
+          "updated_at": "2026-10-28T12:20:36Z",
+          "url": "https://github.com/fastlane/fastlane/issues/30503"
+        },
+        {
+          "number": 30502,
+          "title": "Commands whose exit status is never checked",
+          "updated_at": "2026-10-28T08:39:48Z",
+          "url": "https://github.com/fastlane/fastlane/issues/30502"
+        },
+        {
+          "number": 30499,
+          "title": "upload_to_app_store fails with The provided entity is missing a required attribute - You must provide a value for the attribute 'socialMedia' with this request",
+          "updated_at": "2026-10-29T13:46:51Z",
+          "url": "https://github.com/fastlane/fastlane/issues/30499"
+        }
+      ]
+    },
+    {
+      "repository": "tauri-apps/tauri",
+      "url": "https://github.com/tauri-apps/tauri",
+      "archived": false,
+      "stars": 112451,
+      "open_issues_and_prs": 1506,
+      "pushed_at": "2026-11-03T03:56:22Z",
+      "default_branch": "dev",
+      "license": {
+        "key": "apache-2.0",
+        "name": "Apache License 2.0",
+        "spdx_id": "Apache-2.0",
+        "url": "https://api.github.com/licenses/apache-2.0",
+        "node_id": "MDc6TGljZW5zZTI="
+      },
+      "head": {
+        "sha": "219a607245c79df4c859bf50997bcdcbdbe25ea8",
+        "date": "2026-11-03T03:50:14Z"
+      },
+      "latest_stable_release": {
+        "tag": "tauri-cli-v2.12.4",
+        "published_at": "2026-10-21T11:56:45Z",
+        "url": "https://github.com/tauri-apps/tauri/releases/tag/tauri-cli-v2.12.4",
+        "error": null
+      },
+      "open_issue_sample": [
+        {
+          "number": 16449,
+          "title": "[bug] macOS: since 2.12.2, `restart()` runs `open -n` while the old instance is alive, so the Dock shows a second, unpinned tile",
+          "updated_at": "2026-11-02T15:42:06Z",
+          "url": "https://github.com/tauri-apps/tauri/issues/16449"
+        },
+        {
+          "number": 16442,
+          "title": "[bug] CSP hashes for bundled JS exceed Apple WebKit’s 16 KiB HTTP header limit, blocking startup",
+          "updated_at": "2026-11-01T14:56:35Z",
+          "url": "https://github.com/tauri-apps/tauri/issues/16442"
+        }
+      ]
+    },
+    {
+      "repository": "ios-control/ios-deploy",
+      "url": "https://github.com/ios-control/ios-deploy",
+      "archived": false,
+      "stars": 3638,
+      "open_issues_and_prs": 45,
+      "pushed_at": "2024-06-24T15:30:35Z",
+      "default_branch": "master",
+      "license": {
+        "key": "gpl-3.0",
+        "name": "GNU General Public License v3.0",
+        "spdx_id": "GPL-3.0",
+        "url": "https://api.github.com/licenses/gpl-3.0",
+        "node_id": "MDc6TGljZW5zZTk="
+      },
+      "head": {
+        "sha": "83f7d9ef97d03af42777965e80079f05332cc580",
+        "date": "2024-06-24T15:30:35Z"
+      },
+      "latest_stable_release": {
+        "tag": "1.12.2",
+        "published_at": "2023-04-20T17:27:49Z",
+        "url": "https://github.com/ios-control/ios-deploy/releases/tag/1.12.2",
+        "error": null
+      },
+      "open_issue_sample": [
+        {
+          "number": 608,
+          "title": "iOS 26 support broken - Unable to locate DeviceSupport directory with suffix 'DeveloperDiskImage.dmg'",
+          "updated_at": "2026-07-30T08:41:12Z",
+          "url": "https://github.com/ios-control/ios-deploy/issues/608"
+        },
+        {
+          "number": 604,
+          "title": "ios-deploy: SystemError: <built-in function SBProcess_GetSTDOUT> returned NULL without setting an error",
+          "updated_at": "2024-07-18T19:51:05Z",
+          "url": "https://github.com/ios-control/ios-deploy/issues/604"
+        },
+        {
+          "number": 603,
+          "title": "Is there a way to download crash logs from the device? ",
+          "updated_at": "2024-07-10T07:29:27Z",
+          "url": "https://github.com/ios-control/ios-deploy/issues/603"
+        },
+        {
+          "number": 600,
+          "title": "Can ios-deploy support to debug App Extension(appex)",
+          "updated_at": "2024-05-22T10:22:02Z",
+          "url": "https://github.com/ios-control/ios-deploy/issues/600"
+        },
+        {
+          "number": 599,
+          "title": " ios-deploy[14310:720906] [ !! ] Error 0xe8000080: This application does  not support this kind of device. AMDeviceSecureInstallApplication(0, device, url, options, install_callback, 0)",
+          "updated_at": "2024-04-04T14:28:34Z",
+          "url": "https://github.com/ios-control/ios-deploy/issues/599"
+        }
+      ]
+    },
+    {
+      "repository": "actions/runner-images",
+      "url": "https://github.com/actions/runner-images",
+      "archived": false,
+      "stars": 13563,
+      "open_issues_and_prs": 196,
+      "pushed_at": "2026-11-02T20:17:57Z",
+      "default_branch": "main",
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      },
+      "head": {
+        "sha": "4da2307112a0fad2fd2ecaca8ba7d08683b8c581",
+        "date": "2026-10-30T14:53:57Z"
+      },
+      "latest_stable_release": {
+        "tag": "macos-26-arm64/20261026.0455",
+        "published_at": "2026-10-28T12:03:32Z",
+        "url": "https://github.com/actions/runner-images/releases/tag/macos-26-arm64/20261026.0455",
+        "error": null
+      },
+      "open_issue_sample": [
+        {
+          "number": 15228,
+          "title": "macOS runners are vulnerable to the eMudhra intermediate CA compromise",
+          "updated_at": "2026-11-03T01:08:35Z",
+          "url": "https://github.com/actions/runner-images/issues/15228"
+        },
+        {
+          "number": 15226,
+          "title": "[macOS] Azure DevOps macOS 14 Intel runners extended through November 23, 2026",
+          "updated_at": "2026-11-02T20:00:07Z",
+          "url": "https://github.com/actions/runner-images/issues/15226"
+        }
+      ]
+    },
+    {
+      "repository": "doronz88/pymobiledevice3",
+      "url": "https://github.com/doronz88/pymobiledevice3",
+      "archived": false,
+      "stars": 2960,
+      "open_issues_and_prs": 33,
+      "pushed_at": "2026-11-02T22:53:56Z",
+      "default_branch": "master",
+      "license": {
+        "key": "gpl-3.0",
+        "name": "GNU General Public License v3.0",
+        "spdx_id": "GPL-3.0",
+        "url": "https://api.github.com/licenses/gpl-3.0",
+        "node_id": "MDc6TGljZW5zZTk="
+      },
+      "head": {
+        "sha": "71f2dab7f7f3d8f357912e07d4bdbbeb38756624",
+        "date": "2026-11-02T22:53:34Z"
+      },
+      "latest_stable_release": {
+        "tag": "v11.49.4",
+        "published_at": "2026-11-02T22:53:57Z",
+        "url": "https://github.com/doronz88/pymobiledevice3/releases/tag/v11.49.4",
+        "error": null
+      },
+      "open_issue_sample": [
+        {
+          "number": 2092,
+          "title": "NetworkMonitor: every ConnectionDetectionEvent has pid -2 on iOS 27.2",
+          "updated_at": "2026-10-22T17:09:35Z",
+          "url": "https://github.com/doronz88/pymobiledevice3/issues/2092"
+        },
+        {
+          "number": 2052,
+          "title": "tunneld: a USB-attached device gets no tunnel after its Wi-Fi tunnel drops",
+          "updated_at": "2026-10-22T06:53:48Z",
+          "url": "https://github.com/doronz88/pymobiledevice3/issues/2052"
+        },
+        {
+          "number": 1701,
+          "title": "Restore: cloudOS Features (REM, Cryptexes) stay disabled",
+          "updated_at": "2026-06-09T15:01:26Z",
+          "url": "https://github.com/doronz88/pymobiledevice3/issues/1701"
+        },
+        {
+          "number": 1682,
+          "title": "sysmon exits with code 0 and no data when xcuitest is active (iOS ≤ 16); tunneld fallback fails for some devices (iOS 17+)",
+          "updated_at": "2026-10-22T06:54:59Z",
+          "url": "https://github.com/doronz88/pymobiledevice3/issues/1682"
+        },
+        {
+          "number": 1656,
+          "title": "Question: concurrent RSD connections to same device — anyone else seeing this?",
+          "updated_at": "2026-04-23T08:50:49Z",
+          "url": "https://github.com/doronz88/pymobiledevice3/issues/1656"
+        }
+      ]
+    }
+  ],
+  "action_pins": {
+    "actions/checkout": {
+      "ref": "v5",
+      "sha": "fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+      "url": "https://github.com/actions/checkout/commit/fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09"
+    },
+    "actions/setup-node": {
+      "ref": "v4",
+      "sha": "49933ea5288caeca8642d1e84afbd3f7d6820020",
+      "url": "https://github.com/actions/setup-node/commit/49933ea5288caeca8642d1e84afbd3f7d6820020"
+    },
+    "actions/upload-artifact": {
+      "ref": "v4",
+      "sha": "ea165f8d65b6e75b540449e92b4886f43607fa02",
+      "url": "https://github.com/actions/upload-artifact/commit/ea165f8d65b6e75b540449e92b4886f43607fa02"
+    },
+    "subosito/flutter-action": {
+      "ref": "v2",
+      "sha": "1a449444c387b1966244ae4d4f8c696479add0b2",
+      "url": "https://github.com/subosito/flutter-action/commit/1a449444c387b1966244ae4d4f8c696479add0b2"
+    }
+  }
+}
