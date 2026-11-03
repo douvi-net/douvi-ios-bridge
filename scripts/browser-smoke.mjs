@@ -1,55 +1,24 @@
 import assert from "node:assert/strict";
-import { spawn } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
-import { stripVTControlCharacters } from "node:util";
+import { resolve } from "node:path";
 import { chromium } from "playwright";
+import { preview } from "vite";
 
 const origin = "http://127.0.0.1:4173";
-const viteEntry = resolve(
-  dirname(fileURLToPath(import.meta.resolve("vite/package.json"))),
-  "bin/vite.js",
-);
-const server = spawn(
-  process.execPath,
-  [viteEntry, "preview", "--config", "apps/desktop/vite.config.ts"],
-  {
-    cwd: process.cwd(),
-    stdio: ["ignore", "pipe", "pipe"],
-  },
-);
-let serverOutput = "";
-server.stdout.on("data", (value) => {
-  serverOutput += value;
-});
-server.stderr.on("data", (value) => {
-  serverOutput += value;
-});
 const consoleErrors = [];
 const externalRequests = [];
 const checks = [];
 const out = resolve("test-results");
 await mkdir(out, { recursive: true });
 let browser;
+let server;
 try {
-  let started = false;
-  for (let i = 0; i < 100; i++) {
-    if (server.exitCode !== null) throw new Error(`Preview exited: ${serverOutput}`);
-    try {
-      const r = stripVTControlCharacters(serverOutput).includes(origin)
-        ? await fetch(origin, { signal: AbortSignal.timeout(1000) })
-        : null;
-      if (r?.ok) {
-        started = true;
-        break;
-      }
-    } catch {
-      /* Wait for this local server to start. */
-    }
-    await new Promise((resolveWait) => setTimeout(resolveWait, 150));
-  }
-  assert(started, `Production preview did not start: ${stripVTControlCharacters(serverOutput)}`);
+  // The API resolves after listening; CI logging/ANSI formatting cannot gate readiness.
+  server = await preview({
+    configFile: "apps/desktop/vite.config.ts",
+    preview: { host: "127.0.0.1", port: 4173, strictPort: true },
+  });
+  assert((await fetch(origin, { signal: AbortSignal.timeout(2000) })).ok);
   browser = await chromium.launch({
     headless: true,
     executablePath: process.env.BRIDGE_BROWSER_EXECUTABLE || undefined,
@@ -162,17 +131,13 @@ try {
 } catch (e) {
   await writeFile(
     resolve(out, "browser-smoke.json"),
-    `${JSON.stringify({ result: "FAIL", checks, error: String(e), consoleErrors, externalRequests, serverOutput }, null, 2)}\n`,
+    `${JSON.stringify({ result: "FAIL", checks, error: String(e), consoleErrors, externalRequests, serverReady: !!server }, null, 2)}\n`,
   );
   throw e;
 } finally {
   await browser?.close();
-  if (server.exitCode === null) {
-    const closed = new Promise((resolveClosed) => server.once("close", resolveClosed));
-    server.kill("SIGTERM");
-    const force = setTimeout(() => server.kill("SIGKILL"), 2000);
-    force.unref();
-    await closed;
-    clearTimeout(force);
+  if (server) {
+    server.httpServer.closeAllConnections();
+    await new Promise((resolveClosed) => server.httpServer.close(resolveClosed));
   }
 }
