@@ -4,7 +4,7 @@
 
 A local-first, open-source Windows workbench for the Flutter → macOS CI → iOS journey. Bring your own project and GitHub account. No mandatory Douvi server or cloud AI.
 
-**Status: development foundation, not a released Windows installer.** The local workbench inspects Flutter metadata, drafts an unsigned workflow and explains common build failures offline. GitHub authentication, real workflow dispatch/download, signed IPA creation, phone installation and TestFlight upload are not implemented. No real iOS build has been accepted yet. See [progress](docs/PROGRESS.md).
+**Status: an unsigned Windows x64 development installer has passed automated build/install/native-UI/uninstall checks on Windows Server 2022.** The local workbench inspects Flutter metadata, drafts an unsigned workflow and explains common build failures offline. GitHub authentication, real workflow dispatch/download, signed IPA creation, phone installation and TestFlight upload are not implemented. No real iOS build has been accepted yet. See [progress](docs/PROGRESS.md).
 
 ## Try the workbench
 
@@ -16,6 +16,8 @@ npm run dev
 ```
 
 Open the localhost URL printed by Vite. Open your Flutter project folder, review the findings, enter your exact Flutter version and generate a workflow draft. The project must contain `pubspec.yaml` and `ios/Runner.xcodeproj/project.pbxproj`. The browser workbench reads five allowlisted metadata files; it does not upload your source or execute project scripts.
+
+The verified development build is version `0.1.0-dev.1`, from source `9fb9c19bbaaefc94ccc5eac2f2ba117794c701d4`. [CI evidence](https://github.com/douvi-net/douvi-ios-bridge/actions/runs/41631875336) and the [download/checksum receipt](docs/verification/windows-native-20261103.json) record the exact artifact. Personal Windows 10/11 acceptance and Authenticode signing remain separate. No public Release has been published.
 
 The browser UI is a development/testing surface for the desktop app. It is not a substitute for native Windows verification. [Hướng dẫn tiếng Việt](README.vi.md).
 
@@ -75,7 +77,7 @@ The manual CI workflow has explicit cost gates and does not run on push or pull 
 | `apps/desktop/src-tauri` | Rust/Tauri shell and scoped metadata folder reader |
 | `packages/core/src` | Detector, engine interface, workflow validation, offline diagnostics and evidence gate |
 | `tests` | Unit/integration tests and clearly labelled metadata fixtures |
-| `scripts` | Browser verification |
+| `scripts` | Browser and installed Windows app verification; bundled notices |
 | `docs/research` | Competitor comparison and timestamped GitHub evidence |
 | `docs/adr` | Architecture decisions |
 

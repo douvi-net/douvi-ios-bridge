@@ -1,0 +1,257 @@
+{
+  "result": "PASS",
+  "archive": "Douvi-iOS-Bridge-Windows-x64-0.1.0-dev.1.zip",
+  "archive_bytes": 2240784,
+  "archive_sha256": "68fdf24145c6938db335c6278e134e775b4f2af5ca11cc64594bfea09c230346",
+  "installer": "Douvi iOS Bridge_0.1.0-dev.1_x64-setup.exe",
+  "installer_bytes": 2132970,
+  "installer_sha256": "16b8db8fb91fb1c8a5e5b8d1265d00894cb906ddb1c0623e645b2441d381aac3",
+  "source_sha": "9fb9c19bbaaefc94ccc5eac2f2ba117794c701d4",
+  "run_id": "41631875336",
+  "run_url": "https://github.com/douvi-net/douvi-ios-bridge/actions/runs/41631875336",
+  "native_smoke": {
+    "result": "PASS",
+    "source_sha": "9fb9c19bbaaefc94ccc5eac2f2ba117794c701d4",
+    "run_id": "41631875336",
+    "run_url": "https://github.com/douvi-net/douvi-ios-bridge/actions/runs/41631875336",
+    "host": {
+      "platform": "win32",
+      "release": "10.0.20348",
+      "arch": "x64"
+    },
+    "checks": [
+      "NSIS installer size and x64 PE header checked; SHA-256 recorded",
+      "per-user silent install; installed executable matches compiled binary",
+      "installed release app launches; real Tauri WebView2 renders the workbench",
+      "native folder dialog opens and cancellation leaves no project",
+      "native drop handler uses the scoped folder dialog",
+      "native folder selection -> Rust IPC metadata reader -> actual project findings",
+      "unregistered IPC rejected; VI/EN and theme persistence; no page errors during smoke",
+      "silent uninstall removes the installed executable"
+    ],
+    "limitations": [
+      "Hosted Windows Server runner; personal Windows 10/11 hardware acceptance remains separate.",
+      "Metadata-only fixture; no Flutter/iOS compilation, signing or GitHub integration is tested.",
+      "Unsigned development installer; no public Release or signing certificate is created."
+    ],
+    "installer": {
+      "filename": "Douvi iOS Bridge_0.1.0-dev.1_x64-setup.exe",
+      "bytes": 2132970,
+      "sha256": "16b8db8fb91fb1c8a5e5b8d1265d00894cb906ddb1c0623e645b2441d381aac3",
+      "signed": false
+    },
+    "webview_version": "131.0.2903.86"
+  },
+  "verified_files": [
+    "native-smoke.json",
+    "Cargo.lock",
+    "Douvi iOS Bridge_0.1.0-dev.1_x64-setup.exe",
+    "toolchain.txt"
+  ],
+  "github_artifact": {
+    "id": 13229835008,
+    "name": "windows-development-41631875336-1",
+    "size_in_bytes": 2240784,
+    "url": "https://api.github.com/repos/douvi-net/douvi-ios-bridge/actions/artifacts/13229835008",
+    "archive_download_url": "https://api.github.com/repos/douvi-net/douvi-ios-bridge/actions/artifacts/13229835008/zip",
+    "expired": false,
+    "created_at": "2026-11-03T12:08:07Z",
+    "expires_at": "2026-11-04T12:08:06Z",
+    "updated_at": "2026-11-03T12:08:07Z",
+    "digest": "sha256:68fdf24145c6938db335c6278e134e775b4f2af5ca11cc64594bfea09c230346",
+    "workflow_run": {
+      "id": 41631875336,
+      "repository_id": 1443968976,
+      "head_repository_id": 1443968976,
+      "head_branch": "task03/windows-installer",
+      "head_sha": "9fb9c19bbaaefc94ccc5eac2f2ba117794c701d4"
+    }
+  },
+  "ci_jobs": [
+    {
+      "id": 125903229677,
+      "name": "javascript",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify reviewed source",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run npm ci",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run npm run check",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run npm audit --audit-level=high",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run npx --no-install playwright install --with-deps chromium",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run npm run test:ui",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 125903588803,
+      "name": "windows-native",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify reviewed source",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run npm ci",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Record Rust toolchain",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Generate upstream license resources before native compilation",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run cargo fmt --manifest-path apps/desktop/src-tauri/Cargo.toml --check",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run cargo test --locked --manifest-path apps/desktop/src-tauri/Cargo.toml",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run cargo clippy --locked --all-targets --manifest-path apps/desktop/src-tauri/Cargo.toml -- -D warnings",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Build unsigned development NSIS installer",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install, launch, native IPC, locale, theme and uninstall",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Enforce artifact storage bound",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "javascript_smoke": {
+    "result": "PASS",
+    "checked_at": "2026-11-03T11:59:41.558Z",
+    "browser": "151.0.7922.34",
+    "scope": "Production browser workbench only; metadata fixture, no native Windows or remote CI claim",
+    "checks": [
+      "production landing renders",
+      "no project cannot build or generate",
+      "folder file permission -> metadata parser -> actual project findings",
+      "both consent gates -> generate -> actual workflow file download",
+      "config edit invalidates draft; traversal rejected",
+      "offline log classification redacts before display and does not persist log",
+      "Vietnamese and light theme persist; project/log reset on reload",
+      "small viewport has no horizontal overflow",
+      "no page errors and no external HTTP requests"
+    ],
+    "consoleErrors": [],
+    "externalRequests": []
+  },
+  "native_rust_tests": {
+    "passed": 7,
+    "failed": 0
+  },
+  "documentation_note": "This receipt and documentation are committed after the run; the compiled and tested source is source_sha above."
+}
