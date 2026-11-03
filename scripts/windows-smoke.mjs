@@ -6,6 +6,7 @@ import { createServer } from "node:net";
 import { arch, release, tmpdir } from "node:os";
 import { basename, join, resolve } from "node:path";
 import { chromium } from "playwright";
+import { verifyEmbeddedIcon } from "./windows-icon-check.mjs";
 
 assert.equal(process.platform, "win32", "Run this test on a real Windows host.");
 const output = resolve("test-results/windows");
@@ -92,19 +93,9 @@ async function exists(path) {
 }
 
 async function checkEmbeddedIcon(path) {
-  const result = JSON.parse(
-    (
-      await run("powershell.exe", [
-        "-NoProfile",
-        "-NonInteractive",
-        "-File",
-        resolve("scripts/windows-icon-check.ps1"),
-        "-Executable",
-        path,
-        "-ExpectedIcon",
-        resolve("apps/desktop/src-tauri/icons/icon.ico"),
-      ])
-    ).trim(),
+  const result = verifyEmbeddedIcon(
+    await readFile(path),
+    await readFile(resolve("apps/desktop/src-tauri/icons/icon.ico")),
   );
   assert.equal(result.result, "PASS");
   return { file: basename(path), ...result };

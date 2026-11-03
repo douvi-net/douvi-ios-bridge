@@ -17,6 +17,6 @@ Copy the following outputs into their consuming paths. The command also creates 
 | `128x128@2x.png` | `apps/desktop/src-tauri/icons/icon.png` | Tauri window icon |
 | `icon.ico` | `apps/desktop/src-tauri/icons/icon.ico` | Windows executable, NSIS installer and uninstaller |
 
-NSIS `installerIcon` and `uninstallerIcon` are configured explicitly; the application bundle icon alone does not replace the installer's default icon. The Windows smoke test extracts the real PE icons and compares their rendered pixels against the source ICO. The browser and native WebView2 checks also require the workbench logo to load.
+NSIS `installerIcon` and `uninstallerIcon` are configured explicitly; the application bundle icon alone does not replace the installer's default icon. The Windows smoke test reads the real PE icon resources and requires every frame in every icon group to match the source ICO bytes exactly. This checks all six sizes without relying on legacy GDI PNG decoding. The browser and native WebView2 checks also require the workbench logo to load.
 
 Version `0.1.0-dev.2` introduces this branding. Its Windows installer must pass a new build and installed-app smoke run before it is described as verified. The `0.1.0-dev.1` receipt describes the earlier installer.
