@@ -91,6 +91,25 @@ async function exists(path) {
   }
 }
 
+async function checkEmbeddedIcon(path) {
+  const result = JSON.parse(
+    (
+      await run("powershell.exe", [
+        "-NoProfile",
+        "-NonInteractive",
+        "-File",
+        resolve("scripts/windows-icon-check.ps1"),
+        "-Executable",
+        path,
+        "-ExpectedIcon",
+        resolve("apps/desktop/src-tauri/icons/icon.ico"),
+      ])
+    ).trim(),
+  );
+  assert.equal(result.result, "PASS");
+  return { file: basename(path), ...result };
+}
+
 async function dialog(page, mode, trigger) {
   const pilot = run(
     "powershell.exe",
@@ -141,6 +160,16 @@ try {
   };
   await copyFile(installer, join(output, basename(installer)));
   await copyFile(resolve("apps/desktop/src-tauri/Cargo.lock"), join(output, "Cargo.lock"));
+  report.branding = {
+    source_ico_sha256: await hash(resolve("apps/desktop/src-tauri/icons/icon.ico")),
+    workbench_logo_sha256: await hash(resolve("apps/desktop/public/brand-icon.png")),
+    icons: [
+      await checkEmbeddedIcon(installer),
+      await checkEmbeddedIcon(
+        resolve("apps/desktop/src-tauri/target/release/douvi-ios-bridge.exe"),
+      ),
+    ],
+  };
   report.checks.push("NSIS installer size and x64 PE header checked; SHA-256 recorded");
 
   installationStarted = true;
@@ -200,6 +229,10 @@ try {
   await page.getByRole("heading", { name: "Your code. Your iOS build." }).waitFor();
   assert(await page.evaluate(() => !!window.__TAURI_INTERNALS__));
   assert.equal(await page.locator('input[type="file"]').count(), 0);
+  const logo = page.locator(".brand-logo img");
+  assert(await logo.isVisible());
+  await logo.evaluate((img) => img.decode());
+  assert.equal(await logo.evaluate((img) => img.naturalWidth), 128);
   report.webview_version = browser.version();
   report.checks.push("installed release app launches; real Tauri WebView2 renders the workbench");
 
@@ -247,6 +280,7 @@ try {
     /^uninstall.*\.exe$/i.test(file),
   );
   assert.equal(uninstallers.length, 1, "NSIS uninstaller missing.");
+  report.branding.icons.push(await checkEmbeddedIcon(join(installed, uninstallers[0])));
   await run(join(installed, uninstallers[0]), ["/S"]);
   await until(
     async () => !(await exists(executable)),

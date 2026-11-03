@@ -1,6 +1,6 @@
 {
   "name": "douvi-ios-bridge",
-  "version": "0.1.0-dev.1",
+  "version": "0.1.0-dev.2",
   "private": true,
   "description": "A local-first Windows workbench for Flutter iOS builds on your own macOS CI.",
   "license": "MIT",

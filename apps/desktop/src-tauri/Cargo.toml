@@ -1,6 +1,6 @@
 [package]
 name = "douvi-ios-bridge"
-version = "0.1.0-dev.1"
+version = "0.1.0-dev.2"
 description = "Local-first Windows workbench for Flutter iOS builds"
 authors = ["Douvi Labs"]
 license = "MIT"

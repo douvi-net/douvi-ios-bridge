@@ -654,7 +654,7 @@ dependencies = [
 
 [[package]]
 name = "douvi-ios-bridge"
-version = "0.1.0-dev.1"
+version = "0.1.0-dev.2"
 dependencies = [
  "serde",
  "tauri",

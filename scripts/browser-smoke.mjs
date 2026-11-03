@@ -31,6 +31,11 @@ try {
   });
   await page.goto(origin);
   await page.getByRole("heading", { name: "Your code. Your iOS build." }).waitFor();
+  const logo = page.locator(".brand-logo img");
+  assert(await logo.isVisible());
+  await logo.evaluate((img) => img.decode());
+  assert.equal(await logo.evaluate((img) => img.naturalWidth), 128);
+  assert((await fetch(`${origin}/favicon.png`)).ok);
   await page.screenshot({ path: resolve(out, "workbench-dark.png"), fullPage: true });
   checks.push("production landing renders");
 

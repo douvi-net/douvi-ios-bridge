@@ -42,8 +42,8 @@ export default function App() {
     <div className="app-shell">
       <aside className="sidebar">
         <div className="brand">
-          <span className="brand-logo">
-            <Icon name="bridge" size={25} />
+          <span className="brand-logo" aria-hidden="true">
+            <img src="/brand-icon.png" alt="" width={128} height={128} />
           </span>
           <span>
             <strong>
@@ -106,7 +106,7 @@ export default function App() {
             {t.settings}
           </button>
           <div className="version-label">
-            <span>v0.1.0-dev.1</span>
+            <span>v0.1.0-dev.2</span>
             <span>DOUVI LABS</span>
           </div>
         </div>
