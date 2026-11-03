@@ -4,10 +4,9 @@
   "version": "0.1.0-dev.1",
   "identifier": "net.douvi.iosbridge",
   "build": {
-    "beforeDevCommand": "npm run dev",
+    "beforeDevCommand": "npm run licenses:bundle && npm run dev",
     "devUrl": "http://127.0.0.1:1420",
-    "beforeBuildCommand": "npm run build",
-    "beforeBundleCommand": "npm run licenses:bundle",
+    "beforeBuildCommand": "npm run licenses:bundle && npm run build",
     "frontendDist": "../../../dist"
   },
   "app": {

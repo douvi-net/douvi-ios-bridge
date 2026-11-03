@@ -31,6 +31,7 @@ npm run tauri -- dev
 For a development NSIS build, after completing native checks:
 
 ```powershell
+npm run licenses:bundle
 cargo fmt --manifest-path apps/desktop/src-tauri/Cargo.toml --check
 cargo test --locked --manifest-path apps/desktop/src-tauri/Cargo.toml
 cargo clippy --locked --all-targets --manifest-path apps/desktop/src-tauri/Cargo.toml -- -D warnings

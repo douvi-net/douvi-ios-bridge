@@ -68,6 +68,8 @@ jobs:
           cargo --version | Tee-Object -FilePath test-results/windows/toolchain.txt -Append
           "Windows: $([Environment]::OSVersion.VersionString)" | Tee-Object -FilePath test-results/windows/toolchain.txt -Append
           "Image: $env:ImageOS $env:ImageVersion" | Tee-Object -FilePath test-results/windows/toolchain.txt -Append
+      - name: Generate upstream license resources before native compilation
+        run: npm run licenses:bundle
       - run: cargo fmt --manifest-path apps/desktop/src-tauri/Cargo.toml --check
       - run: cargo test --locked --manifest-path apps/desktop/src-tauri/Cargo.toml
       - run: cargo clippy --locked --all-targets --manifest-path apps/desktop/src-tauri/Cargo.toml -- -D warnings
