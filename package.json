@@ -1,0 +1,42 @@
+{
+  "name": "douvi-ios-bridge",
+  "version": "0.1.0-dev.1",
+  "private": true,
+  "description": "A local-first Windows workbench for Flutter iOS builds on your own macOS CI.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "dev": "vite --config apps/desktop/vite.config.ts",
+    "build": "npm run typecheck && vite build --config apps/desktop/vite.config.ts",
+    "preview": "vite preview --config apps/desktop/vite.config.ts --host 127.0.0.1",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check apps/desktop/src packages/core/src tests scripts --error-on-warnings",
+    "format": "biome check --write apps/desktop/src packages/core/src tests scripts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "tauri": "cd apps/desktop && tauri",
+    "check": "npm run lint && npm run typecheck && npm test && npm run build",
+    "test:ui": "node scripts/browser-smoke.mjs"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "2.12.4",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "yaml": "2.9.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.6.4",
+    "@tauri-apps/cli": "2.12.4",
+    "@types/node": "24.19.2",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.2.1",
+    "playwright": "1.62.1",
+    "typescript": "7.0.2",
+    "vite": "8.3.5",
+    "vitest": "5.1.0"
+  }
+}
