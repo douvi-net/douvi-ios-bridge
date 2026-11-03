@@ -1,0 +1,22 @@
+name: Bug report
+description: Report a reproducible issue without secrets or private logs.
+body:
+  - type: markdown
+    attributes:
+      value: Do not attach tokens, certificates, profiles, UDIDs or unsanitized logs. Security reporting is documented in SECURITY.md.
+  - type: input
+    id: environment
+    attributes:
+      label: App version, Windows version, Flutter and Xcode versions if relevant
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps, expected result and actual result
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Sanitized evidence and workflow run URL, if available

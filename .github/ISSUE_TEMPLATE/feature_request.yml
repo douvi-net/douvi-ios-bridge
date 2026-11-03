@@ -1,0 +1,15 @@
+name: Feature request
+description: Describe a developer's concrete problem.
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do, on which platform?
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Proposed behavior, acceptance evidence and potential costs
+    validations:
+      required: true
