@@ -75,7 +75,7 @@ jobs:
       - run: cargo clippy --locked --all-targets --manifest-path apps/desktop/src-tauri/Cargo.toml -- -D warnings
       - name: Build unsigned development NSIS installer
         id: build
-        run: npm run tauri -- build -- --locked
+        run: npm run tauri -- build --no-binary-patching -- --locked
       - name: Install, launch, native IPC, locale, theme and uninstall
         run: npm run test:windows
       - name: Enforce artifact storage bound

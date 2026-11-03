@@ -35,7 +35,7 @@ npm run licenses:bundle
 cargo fmt --manifest-path apps/desktop/src-tauri/Cargo.toml --check
 cargo test --locked --manifest-path apps/desktop/src-tauri/Cargo.toml
 cargo clippy --locked --all-targets --manifest-path apps/desktop/src-tauri/Cargo.toml -- -D warnings
-npm run tauri -- build -- --locked
+npm run tauri -- build --no-binary-patching -- --locked
 npm run test:windows
 ```
 

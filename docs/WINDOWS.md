@@ -13,11 +13,13 @@ npm run licenses:bundle
 cargo fmt --manifest-path apps/desktop/src-tauri/Cargo.toml --check
 cargo test --locked --manifest-path apps/desktop/src-tauri/Cargo.toml
 cargo clippy --locked --all-targets --manifest-path apps/desktop/src-tauri/Cargo.toml -- -D warnings
-npm run tauri -- build -- --locked
+npm run tauri -- build --no-binary-patching -- --locked
 npm run test:windows
 ```
 
 Generate notices before invoking Cargo directly: Tauri's native build script reads configured resources even during `cargo test`. The Tauri dev/build hooks generate notices automatically. The installer is under `apps/desktop/src-tauri/target/release/bundle/nsis/`. Installation is per user. It does not require a system-wide install. The WebView2 bootstrapper needs internet only if the runtime is missing.
+
+Use `--no-binary-patching` in this single-NSIS development lane so the installed executable and the compiled executable have the same SHA-256. Tauri otherwise patches bundle-type metadata while preparing the installer. No per-bundle-type updater is implemented here.
 
 ## What the automated Windows lane checks
 
