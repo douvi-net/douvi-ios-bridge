@@ -4,12 +4,14 @@ This lane produces an **unsigned x64 NSIS development installer**, not a public 
 
 ## Verified development build
 
-[Run 41631875336](https://github.com/douvi-net/douvi-ios-bridge/actions/runs/41631875336) passed for source `9fb9c19bbaaefc94ccc5eac2f2ba117794c701d4` on Windows Server 2022 x64. The [final receipt](verification/windows-native-20261103.json) records the artifact download/digest check and all eight installed-app smoke groups. Personal Windows 10/11 acceptance remains separate.
+[Run 41640848673](https://github.com/douvi-net/douvi-ios-bridge/actions/runs/41640848673) passed for source `c56fc30b3923d2f6cc5dba1b0a2316751335a2e7` on Windows Server 2022 x64. The [final receipt](verification/windows-branding-20261103.json) records the artifact download/digest check and all eight installed-app smoke groups. Personal Windows 10/11 acceptance remains separate.
 
-- Version: `0.1.0-dev.1`; unsigned per-user NSIS.
-- Installer: `Douvi iOS Bridge_0.1.0-dev.1_x64-setup.exe` (2,132,970 bytes).
-- Installer SHA-256: `16b8db8fb91fb1c8a5e5b8d1265d00894cb906ddb1c0623e645b2441d381aac3`.
-- GitHub artifact: `13229835008`; one-day retention, expires `2026-11-04T12:08:06Z`. Rebuild from the recorded source after expiry.
+- Version: `0.1.0-dev.2`; unsigned per-user NSIS.
+- Installer: `Douvi iOS Bridge_0.1.0-dev.2_x64-setup.exe` (2,227,973 bytes).
+- Installer SHA-256: `8351c3c41d290e4a8d1131e1eec810a84ca04556468d045d40d179e6399f8bc1`.
+- GitHub artifact: `13233213236`; one-day retention, expires `2026-11-04T13:12:40Z`. Rebuild from the recorded source after expiry.
+
+The earlier `0.1.0-dev.1` build has its own [historical receipt](verification/windows-native-20261103.json). See [branding](BRANDING.md) for the approved master and icon export paths.
 
 ## Reproduce
 
@@ -33,6 +35,7 @@ Use `--no-binary-patching` in this single-NSIS development lane so the installed
 ## What the automated Windows lane checks
 
 - Real x64 PE executable and a nonempty NSIS installer with a 50 MiB bound.
+- Real PE icons from the executable, installer and uninstaller match the approved green ICO byte for byte at all six resolutions.
 - Installer SHA-256, exact source commit and run association in `native-smoke.json`.
 - Silent install in a unique temporary location; the installed executable matches the compiled executable by SHA-256.
 - Launch the **installed release executable**, attach Playwright to its actual WebView2, verify the workbench renders and Tauri IPC is present.
@@ -54,7 +57,7 @@ The existing manual workflow accepts a full reviewed source SHA and refuses a mo
 Compare the downloaded installer's SHA-256 against the recorded value before installation:
 
 ```powershell
-Get-FileHash -Algorithm SHA256 '.\Douvi iOS Bridge_0.1.0-dev.1_x64-setup.exe'
+Get-FileHash -Algorithm SHA256 '.\Douvi iOS Bridge_0.1.0-dev.2_x64-setup.exe'
 ```
 
 Use the actual filename from the artifact. The installer has no Authenticode publisher signature, so Windows may show an unknown-publisher or SmartScreen notice. Code signing and public release remain separate gates. Do not disable operating-system protections for this test.

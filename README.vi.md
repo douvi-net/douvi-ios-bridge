@@ -2,9 +2,9 @@
 
 Công cụ mã nguồn mở giúp lập trình viên Windows chuẩn bị build iOS bằng macOS CI của mình, không bắt buộc sở hữu máy Mac.
 
-**Đã có bộ cài Windows x64 bản phát triển `0.1.0-dev.1`, chưa ký số.** CI trên Windows Server 2022 đã kiểm tra build, cài đặt, mở ứng dụng, hộp chọn thư mục native, Rust IPC, ngôn ngữ/theme và gỡ cài đặt. Chưa nghiệm thu trên máy Windows 10/11 cá nhân; chưa có IPA thật hoặc public Release.
+**Đã có bộ cài Windows x64 bản phát triển `0.1.0-dev.2`, chưa ký số.** CI trên Windows Server 2022 đã kiểm tra build, cài đặt, mở ứng dụng, hộp chọn thư mục native, Rust IPC, ngôn ngữ/theme và gỡ cài đặt. Chưa nghiệm thu trên máy Windows 10/11 cá nhân; chưa có IPA thật hoặc public Release.
 
-[Kết quả CI](https://github.com/douvi-net/douvi-ios-bridge/actions/runs/41631875336), [biên nhận artifact và SHA-256](docs/verification/windows-native-20261103.json), [hướng dẫn kiểm thử/cài Windows](docs/WINDOWS.md).
+[Kết quả CI](https://github.com/douvi-net/douvi-ios-bridge/actions/runs/41640848673), [biên nhận artifact và SHA-256](docs/verification/windows-branding-20261103.json), [hướng dẫn kiểm thử/cài Windows](docs/WINDOWS.md).
 
 ## Đã có gì?
 
@@ -14,6 +14,7 @@ Công cụ mã nguồn mở giúp lập trình viên Windows chuẩn bị build 
 - Tạo/tải workflow nháp build `.app` **chưa ký** trên macOS. Không tự ghi vào repo hoặc chạy CI.
 - Chẩn đoán lỗi build offline, ẩn token nhận diện được và đường dẫn cá nhân.
 - Installer NSIS cài theo người dùng, kèm văn bản giấy phép và inventory của 252 package.
+- Logo xanh Douvi đã gắn vào giao diện, cửa sổ, executable, installer và uninstaller; icon nhúng được kiểm chứng trên Windows.
 
 ## Mở bản làm việc
 
@@ -30,7 +31,7 @@ Nếu chưa có thư mục iOS, sao lưu dự án trước khi chạy `flutter c
 
 Để chạy desktop từ source: cài [C++ Build Tools, WebView2 và Rust MSVC theo Tauri](https://v2.tauri.app/start/prerequisites/), rồi chạy `npm run tauri -- dev`. Rust 1.99.1 và dependency lock đã được ghim. Xem các lệnh build/kiểm tra đầy đủ trong [hướng dẫn Windows](docs/WINDOWS.md).
 
-Với bộ cài đã kiểm chứng, giải nén artifact, đối chiếu SHA-256 trong `native-smoke.json`, rồi chạy `Douvi iOS Bridge_0.1.0-dev.1_x64-setup.exe`. Đây là bản chưa ký Authenticode, nên Windows có thể hiện cảnh báo nhà phát hành chưa xác định. Không tắt các biện pháp bảo vệ của hệ điều hành để cài thử. Artifact CI chỉ được giữ một ngày; có thể tự build lại từ source đã ghi nhận.
+Với bộ cài đã kiểm chứng, giải nén artifact, đối chiếu SHA-256 trong `native-smoke.json`, rồi chạy `Douvi iOS Bridge_0.1.0-dev.2_x64-setup.exe`. Đây là bản chưa ký Authenticode, nên Windows có thể hiện cảnh báo nhà phát hành chưa xác định. Không tắt các biện pháp bảo vệ của hệ điều hành để cài thử. Artifact CI chỉ được giữ một ngày; có thể tự build lại từ source đã ghi nhận.
 
 ## Phần cần làm tiếp
 

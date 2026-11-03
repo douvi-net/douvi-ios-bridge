@@ -17,7 +17,7 @@ npm run dev
 
 Open the localhost URL printed by Vite. Open your Flutter project folder, review the findings, enter your exact Flutter version and generate a workflow draft. The project must contain `pubspec.yaml` and `ios/Runner.xcodeproj/project.pbxproj`. The browser workbench reads five allowlisted metadata files; it does not upload your source or execute project scripts.
 
-The verified development build is version `0.1.0-dev.1`, from source `9fb9c19bbaaefc94ccc5eac2f2ba117794c701d4`. [CI evidence](https://github.com/douvi-net/douvi-ios-bridge/actions/runs/41631875336) and the [download/checksum receipt](docs/verification/windows-native-20261103.json) record the exact artifact. Personal Windows 10/11 acceptance and Authenticode signing remain separate. No public Release has been published.
+The verified development build is version `0.1.0-dev.2`, from source `c56fc30b3923d2f6cc5dba1b0a2316751335a2e7`. [CI evidence](https://github.com/douvi-net/douvi-ios-bridge/actions/runs/41640848673) and the [download/checksum receipt](docs/verification/windows-branding-20261103.json) record the exact artifact. Personal Windows 10/11 acceptance and Authenticode signing remain separate. No public Release has been published.
 
 The browser UI is a development/testing surface for the desktop app. It is not a substitute for native Windows verification. [Hướng dẫn tiếng Việt](README.vi.md).
 
@@ -40,6 +40,8 @@ cargo clippy --locked --all-targets --manifest-path apps/desktop/src-tauri/Cargo
 npm run tauri -- build --no-binary-patching -- --locked
 npm run test:windows
 ```
+
+The green Douvi D/bridge logo is used in the workbench, window, executable, installer and uninstaller. Embedded Windows icons are extracted and compared with the approved ICO during verification. See [branding assets](docs/BRANDING.md).
 
 The build bundles upstream license texts and their exact dependency inventory. See [Windows verification](docs/WINDOWS.md) and [progress](docs/PROGRESS.md) for actual build/install results and remaining limits. A local web check or Rust dependency preflight does not constitute Windows acceptance.
 

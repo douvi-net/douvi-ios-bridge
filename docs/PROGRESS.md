@@ -1,18 +1,19 @@
 # Tiến độ Douvi iOS Bridge — 03/11/2026
 
-Repository chính thức: https://github.com/douvi-net/douvi-ios-bridge, **Public, MIT**, theo phê duyệt của chủ tài khoản. **Đã hoàn tất kiểm thử tự động và đóng gói bộ cài phát triển Windows x64 `0.1.0-dev.1`. Chưa có IPA thật hoặc public Release.**
+Repository chính thức: https://github.com/douvi-net/douvi-ios-bridge, **Public, MIT**, theo phê duyệt của chủ tài khoản. **Đã hoàn tất kiểm thử tự động và đóng gói bộ cài phát triển Windows x64 `0.1.0-dev.2`. Chưa có IPA thật hoặc public Release.**
 
 ## TASK 03 — Kết quả Windows
 
-[GitHub Actions run 41631875336](https://github.com/douvi-net/douvi-ios-bridge/actions/runs/41631875336) hoàn tất thành công trên source `9fb9c19bbaaefc94ccc5eac2f2ba117794c701d4`. Bản NSIS cài theo người dùng đã được cài, mở bằng executable vừa cài và gỡ thành công trên Windows Server 2022 x64. Kiểm thử kết nối vào WebView2 thật của Tauri, không thay bằng giao diện web giả lập.
+[GitHub Actions run 41640848673](https://github.com/douvi-net/douvi-ios-bridge/actions/runs/41640848673) hoàn tất thành công trên source `c56fc30b3923d2f6cc5dba1b0a2316751335a2e7`. Bản NSIS cài theo người dùng đã được cài, mở bằng executable vừa cài và gỡ thành công trên Windows Server 2022 x64. Kiểm thử kết nối vào WebView2 thật của Tauri, không thay bằng giao diện web giả lập.
 
 - JavaScript: lint, TypeScript, **71 tests / 3 files**, production web build, npm audit không báo advisory và **9 nhóm browser smoke** đều đạt.
 - Native: Rust **1.99.1**, Cargo.lock, rustfmt, **7 test Rust** và Clippy với `-D warnings` đều đạt trên Windows.
 - **8 nhóm native smoke** đạt: PE/hash, cài per-user và đối chiếu binary, mở WebView2, mở/hủy folder picker, drop-handler fallback, chọn fixture qua native dialog → Rust IPC → findings, từ chối IPC lạ cùng VI/EN/theme persistence, gỡ cài đặt.
+- Logo xanh Douvi D/cây cầu được gắn vào giao diện và tài nguyên Windows. Icon của ứng dụng, installer và uninstaller đã được trích xuất từ PE thật, đối chiếu dữ liệu từng frame với ICO đã duyệt; cả ba đạt.
 - Bộ cài kèm giấy phép upstream và inventory cho 252 package. RustSec preflight không có vulnerability entry; hai cảnh báo thông tin nằm ngoài dependency graph Windows đã chọn, xem [audit](verification/task03-rust-audit.json).
-- ZIP artifact đã tải về và được đối chiếu digest GitHub, CRC, biên nhận PASS, source/run ID, hash/size installer, Cargo.lock và toolchain. [Biên nhận cuối](verification/windows-native-20261103.json), [cách tái tạo](WINDOWS.md).
+- ZIP artifact đã tải về và được đối chiếu digest GitHub, CRC, biên nhận PASS, source/run ID, hash/size installer, Cargo.lock và toolchain. [Biên nhận cuối](verification/windows-branding-20261103.json), [cách tái tạo](WINDOWS.md).
 
-Installer `Douvi iOS Bridge_0.1.0-dev.1_x64-setup.exe`: 2,132,970 byte, SHA-256 `16b8db8fb91fb1c8a5e5b8d1265d00894cb906ddb1c0623e645b2441d381aac3`. Artifact GitHub `13229835008` được giữ một ngày, hết hạn `2026-11-04T12:08:06Z`. Commit thêm biên nhận/tài liệu sau run chỉ cập nhật tài liệu; source đã build vẫn là SHA nêu trên.
+Installer `Douvi iOS Bridge_0.1.0-dev.2_x64-setup.exe`: 2,227,973 byte, SHA-256 `8351c3c41d290e4a8d1131e1eec810a84ca04556468d045d40d179e6399f8bc1`. Artifact GitHub `13233213236` được giữ một ngày, hết hạn `2026-11-04T13:12:40Z`. Commit thêm biên nhận/tài liệu sau run chỉ cập nhật tài liệu; source đã build vẫn là SHA nêu trên.
 
 **Phạm vi:** runner Windows Server không thay cho nghiệm thu máy Windows 10/11 cá nhân, kéo thả vật lý hoặc máy sạch thiếu WebView2. Đây là bộ cài phát triển chưa ký Authenticode. Fixture chỉ có metadata; không suy ra Flutter/iOS build, signing, cài iPhone hoặc TestFlight đã hoạt động.
 
@@ -29,6 +30,8 @@ Installer `Douvi iOS Bridge_0.1.0-dev.1_x64-setup.exe`: 2,132,970 byte, SHA-256 
 | TASK 11–12 — Release / Community | **Chưa thực hiện** | Chưa phát hành Release hoặc đăng bài cộng đồng. |
 
 ## Chứng cứ lịch sử và chi phí
+
+Bản `0.1.0-dev.1` trước khi đổi logo vẫn có [biên nhận riêng](verification/windows-native-20261103.json). Biên nhận mới ở trên thuộc bản `0.1.0-dev.2`.
 
 [Manifest](verification/manifest.json), [local checks](verification/local-checks.txt), [production build](verification/build-check.txt) và [browser checks](verification/browser-smoke.json) là bằng chứng mã nền cục bộ trước khi công khai source. [Native preflight](verification/task03-native-preflight.json) là trạng thái trước Windows CI; không thay cho biên nhận cuối ở trên.
 
