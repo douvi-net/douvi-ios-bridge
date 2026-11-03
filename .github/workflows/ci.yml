@@ -1,0 +1,60 @@
+name: Foundation checks (manual)
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_ci_cost:
+        description: I reviewed this account's CI quota and possible runner/storage charges
+        required: true
+        type: boolean
+        default: false
+      verify_windows:
+        description: Also build and check the native Windows app (additional CI usage)
+        required: true
+        type: boolean
+        default: false
+permissions:
+  contents: read
+jobs:
+  javascript:
+    if: ${{ inputs.confirm_ci_cost }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24'
+      - run: npm ci
+      - run: npm run check
+      - run: npm audit --audit-level=high
+      - run: npx --no-install playwright install --with-deps chromium
+      - run: npm run test:ui
+  windows-native:
+    if: ${{ inputs.confirm_ci_cost && inputs.verify_windows }}
+    runs-on: windows-2022
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24'
+      - run: npm ci
+      - name: Record Rust toolchain
+        run: rustc --version; cargo --version
+      - run: cargo generate-lockfile --manifest-path apps/desktop/src-tauri/Cargo.toml
+      - run: cargo fmt --manifest-path apps/desktop/src-tauri/Cargo.toml --check
+      - run: cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml
+      - run: cargo clippy --manifest-path apps/desktop/src-tauri/Cargo.toml -- -D warnings
+      - run: npm run tauri -- build
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: windows-development-build
+          path: |
+            apps/desktop/src-tauri/target/release/bundle/nsis/*
+            apps/desktop/src-tauri/Cargo.lock
+          if-no-files-found: error
+          retention-days: 1
